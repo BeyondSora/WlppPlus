@@ -66,7 +66,7 @@ class scan {
         scan();
         ~scan();
 
-        Tokens operator() (stringstream src);   // make scan a functor
+        Tokens operator() (const stringstream& src);   // make scan a functor
 
     private:
         static Kind kind;

@@ -21,6 +21,6 @@ scan::scan() {};
 
 scan::~scan() {};
 
-Tokens scan::operator() (stringstream src)
+Tokens scan::operator() (const stringstream& src)
 {
 }
