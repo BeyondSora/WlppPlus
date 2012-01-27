@@ -1,0 +1,33 @@
+NOTE:
+=====
+This file is written on a linux machine and has no <CR> inserted,
+  please view on a text editor that supports UNIX-style line breaks.
+
+
+A Brief Introduction to Wlpp+
+=============================
+This project aims to create a simple, ease to use language that is similar
+to C, while also acts as a very good exercise for myself. The idea came from
+the compiler project from my university class CS241, and the simple language
+we were required to implement - "Wlpp".
+
+Wlpp is a very simple language that is very much just a dumb-down version
+of C. In fact, a complete Wlpp program can work as a function in any C
+programs. Wlpp was created because the univsersity wanted something simple
+and easy for second year students to implement. However, simplicity is
+also Wlpp's biggest disadvantage. It is simply not enough to do anything
+more than writing a simple bubble sort or the likes. For example, it only
+supports two data types: int and int* ! So, I decided to add more firepower
+to the "toy" language to make it less like a toy, aka WLPP+ ! (^_^)
+
+Wlpp+ aims to be a lot more powerful than Wlpp and at the same time keep
+the simplicity of the original design purpose. First of all, a boolean type
+is added, along with char in the near future. I'm also considering adding
+char*, since it is definitely nice to be able to display meaningful messages
+instead of only writing a program that does only arithmetic operations.
+Functions are definitely coming to Wlpp+, but no function overloading; that
+is just too much C++ complexity.
+
+
+Wlpp+ Specification
+===================
