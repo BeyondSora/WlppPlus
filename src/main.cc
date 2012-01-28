@@ -1,15 +1,11 @@
 #include "common.h"
 
-#include "file.h"
-#include "scan.h"
+#include "run_main.h"
 
 int main()
 {
-    std::stringstream src;
-
-    file::to_sstream("hello", src);
-
-    common::toString(15);
+    run_main App;
+    App.run();
 
     return 0;
 }

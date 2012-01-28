@@ -1,25 +1,33 @@
+/******************************************************************************
+ * file class is only for opening and closing files
+ *
+ * All members are static
+ *
+ * Do NOT initialize an instance of this class !!!
+ ******************************************************************************/
+
 #ifndef FILE_H
 #define FILE_H
 
 #include <iostream>
-#include <sstream>
+#include <fstream>
 
-using std::string;
-using std::stringstream;
+#include "common.h"
 
-namespace file {
+enum Errorcode {
+    FILE_CANNOT_OPEN,
+    FILE_CANNOT_CLOSE
+};
 
-    enum Errorcode {
-        FILE_CANNOT_OPEN,
-        FILE_CANNOT_CLOSE
-    };
+class file {
 
-    void err (Errorcode e, string msg);
+    public:
+        static common::Words toWords(std::string filename);
 
-    // Since stringstream is not copy-able, must pass
-    //  a function to obtain stringstream of the file
-    void to_sstream(string filename, stringstream& src);
+    private:
+        static void err (Errorcode e, std::string msg);
+        static void toWords(std::ifstream& ifs, common::Words& words);
 
-}
+};
 
 #endif

@@ -1,47 +1,59 @@
 #include "file.h"
 
-#include <fstream>
+#include "algorithm"
+#include "iterator"
+#include "sstream"
 
-#include "common.h"
+void file::err (Errorcode e, std::string msg)
+{
+    switch (e) {
+        default:
+            std::cerr << "Unknown error.\n";
+            break;
+        case FILE_CANNOT_OPEN:
+            std::cerr << "file \"" << msg
+                << "\" could not be opened.\n";
+            break;
+        case FILE_CANNOT_CLOSE:
+            std::cerr << "file \"" << msg
+                << "\" could not be closed.\n";
+            break;
+    }
+}
 
-using std::cerr;
-using std::ifstream;
-using std::string;
-using std::stringstream;
+common::Words file::toWords(std::string filename)
+{
+    common::Words words;
 
-namespace file {
+    try {
+        std::ifstream ifs(filename.c_str());
+        if (ifs.fail()) throw FILE_CANNOT_OPEN;
 
-    void err (Errorcode e, string msg)
-    {
-        switch (e) {
-            default:
-                cerr << "Unknown error.\n";
-                break;
-            case FILE_CANNOT_OPEN:
-                cerr << "file " << msg
-                    << " could not be opened.\n";
-                break;
-            case FILE_CANNOT_CLOSE:
-                cerr << "file " << msg
-                    << " could not be closed.\n";
-                break;
-        }
+        toWords(ifs, words);
+
+        ifs.close();
+        if (ifs.fail()) throw FILE_CANNOT_CLOSE;
+    }
+    catch (Errorcode e) {
+        err(e, filename);
     }
 
-    void to_sstream(string filename, stringstream& src)
-    {
-        try {
-            ifstream src_file(filename.c_str());
-            if (src_file.fail()) throw FILE_CANNOT_OPEN;
+    return words;
+}
 
-            src << src_file.rdbuf();
+typedef std::istream_iterator<std::string> Word;
 
-            src_file.close();
-            if (src_file.fail()) throw FILE_CANNOT_CLOSE;
-        }
-        catch (Errorcode e) {
-            err(e, filename);
-        }
+void file::toWords(std::ifstream& ifs, common::Words& words)
+{
+    std::string line;
+
+    while (std::getline(ifs, line)) {
+        std::istringstream iss(line);
+        common::WordLine wordLine;
+
+        std::copy(Word(iss), Word(), std::back_inserter(wordLine));
+        words.push_back(wordLine);
     }
 
+    ifs.clear();    // clear error flag set by std::getline()
 }
