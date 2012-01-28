@@ -1,3 +1,10 @@
+/******************************************************************************
+ * Everything shared across classes, namespaces and such is
+ *  included in this common namespace.
+ *
+ * Include this header in every other class/namespace.
+ ******************************************************************************/
+
 #ifndef COMMON_H
 #define COMMON_H
 

@@ -19,6 +19,7 @@ void file::err (Errorcode e, std::string msg)
                 << "\" could not be closed.\n";
             break;
     }
+    std::exit(-1);
 }
 
 common::Words file::toWords(std::string filename)

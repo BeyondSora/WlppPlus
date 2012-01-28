@@ -1,9 +1,10 @@
 /******************************************************************************
- * file class is only for opening and closing files
+ * This file class is only for opening and closing files.
  *
- * All members are static
+ * All members are static.
  *
  * Do NOT initialize an instance of this class !!!
+ *  Treat this class as a namespace.
  ******************************************************************************/
 
 #ifndef FILE_H

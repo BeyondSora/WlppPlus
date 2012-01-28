@@ -1,8 +1,8 @@
 /******************************************************************************
  * Do NOT initialize a new instance of scan class !!!
  *
- * An global static instance SCAN is already declared within this header
- *  please use that instead.
+ * An global static instance SCAN is already declared within this header.
+ *  Please use that instead.
  ******************************************************************************/
 
 #ifndef SCAN_H
