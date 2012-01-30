@@ -8,7 +8,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <assert.h>
 #include <stdlib.h>
 
 #include <string>
@@ -16,8 +15,7 @@
 
 namespace common {
 
-    typedef std::vector<std::string> WordLine;
-    typedef std::vector<WordLine> Words;
+    typedef std::vector<std::string> Lines;
 
     // Each token has one of the following kinds
     //  corresponding to lexical syntax of Wlpp+
@@ -56,7 +54,12 @@ namespace common {
         AND,        // &&
 
         COMMA,      // ,
-        SEMI        // ;
+        SEMI,       // ;
+
+        COMMENT,    // //
+        WHITESPACE, // Whitespace
+
+        NUL         // Bad/invalid token
     };
 
     // Atomic unit for Wlpp+

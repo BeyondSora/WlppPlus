@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include <assert.h>
+
 namespace common {
 
     //

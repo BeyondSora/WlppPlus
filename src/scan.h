@@ -17,12 +17,9 @@
 class scan {
 
     public:
-        scan();
-        ~scan();
-
-        // make scan a functor
+        // Make scan a functor
         //  that takes source code in unit of words
-        common::Tokens operator() (const common::Words& words);
+        common::Tokens operator() (const common::Lines &lines);
 
     private:
         common::Tokens tokens;

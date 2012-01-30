@@ -1,10 +1,8 @@
 #include "file.h"
 
-#include "algorithm"
-#include "iterator"
-#include "sstream"
+#include <cstdlib>
 
-void file::err (Errorcode e, std::string msg)
+void file::err(Errorcode e, std::string msg)
 {
     switch (e) {
         default:
@@ -22,15 +20,15 @@ void file::err (Errorcode e, std::string msg)
     std::exit(-1);
 }
 
-common::Words file::toWords(std::string filename)
+common::Lines file::toLines(std::string filename)
 {
-    common::Words words;
+    std::vector<std::string> lines;
 
     try {
         std::ifstream ifs(filename.c_str());
         if (ifs.fail()) throw FILE_CANNOT_OPEN;
 
-        toWords(ifs, words);
+        toLines(ifs, lines);
 
         ifs.close();
         if (ifs.fail()) throw FILE_CANNOT_CLOSE;
@@ -39,22 +37,16 @@ common::Words file::toWords(std::string filename)
         err(e, filename);
     }
 
-    return words;
+    return lines;
 }
 
-typedef std::istream_iterator<std::string> Word;
-
-void file::toWords(std::ifstream& ifs, common::Words& words)
+void file::toLines(std::ifstream& ifs, common::Lines &lines)
 {
     std::string line;
 
-    while (std::getline(ifs, line)) {
-        std::istringstream iss(line);
-        common::WordLine wordLine;
-
-        std::copy(Word(iss), Word(), std::back_inserter(wordLine));
-        words.push_back(wordLine);
+    while(std::getline(ifs, line)) {
+        lines.push_back(line);
     }
 
-    ifs.clear();    // clear error flag set by std::getline()
+    ifs.clear();    // clear error bit set by getline()
 }

@@ -11,7 +11,7 @@ class run_main {
         run_main();
         ~run_main();
 
-        // compiler starts here
+        // Compiler starts here
         void run();
 
     private:

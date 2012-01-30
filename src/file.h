@@ -23,11 +23,11 @@ enum Errorcode {
 class file {
 
     public:
-        static common::Words toWords(std::string filename);
+        static common::Lines toLines(std::string filename);
 
     private:
-        static void err (Errorcode e, std::string msg);
-        static void toWords(std::ifstream& ifs, common::Words& words);
+        static void err(Errorcode e, std::string msg);
+        static void toLines(std::ifstream &ifs, common::Lines &lines);
 
 };
 
