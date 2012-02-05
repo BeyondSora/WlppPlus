@@ -12,7 +12,7 @@
 
 namespace file {
 
-    common::Lines toLines(std::string const& filename);
+common::Lines toLines(std::string const& filename);
 
 }
 

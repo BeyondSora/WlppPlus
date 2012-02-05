@@ -14,8 +14,8 @@
 //  to return Tokenized source code.
 namespace scan {
 
-        // Take source file in unit of words and tokenize it.
-        common::Tokens tokenize(common::Lines const& lines);
+// Take source file in unit of words and tokenize it.
+common::Tokens tokenize(common::Lines const& lines);
 
 }
 
