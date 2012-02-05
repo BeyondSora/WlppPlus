@@ -18,7 +18,7 @@ namespace common {
     typedef std::vector<std::string> Lines;
 
     // Each token has one of the following kinds
-    //  corresponding to lexical syntax of Wlpp+
+    //  corresponding to lexical syntax of Wlpp+.
     enum Kind {
         ID,         // Any identifier that is not a reserved keyword
 
@@ -36,6 +36,8 @@ namespace common {
         RBRACE,     // }
         LBRACK,     // [
         RBRACK,     // ]
+
+        BECOMES,    // =
 
         EQ,         // ==
         NE,         // !=
@@ -59,7 +61,7 @@ namespace common {
         COMMENT,    // //
         WHITESPACE, // Whitespace
 
-        NUL         // Bad/invalid token
+        NUL,        // Bad/invalid token
     };
 
     // Atomic unit for Wlpp+
@@ -67,8 +69,8 @@ namespace common {
         Kind kind;
         std::string lexeme;
 
-        std::string getID();    // only for ID tokens
-        int toInt();            // only for INT tokens
+        std::string getID();    // Only for ID tokens
+        int toInt();            // Only for INT tokens
     };
 
     typedef std::vector<Token> TokenLine;

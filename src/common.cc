@@ -5,7 +5,7 @@
 namespace common {
 
     //
-    // Token struct member functions
+    // Token struct's member functions:
     std::string Token::getID()
     {
         assert(this->kind == ID);

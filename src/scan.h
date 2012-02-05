@@ -1,31 +1,22 @@
 /******************************************************************************
- * Do NOT initialize a new instance of scan class !!!
+ * This namespace is for scanning through the source file and tokenize it.
  *
- * An global static instance SCAN is already declared within this header.
- *  Please use that instead.
+ * More implementation details are placed in .cc file,
+ *  but end users should have no need for those.
  ******************************************************************************/
 
 #ifndef SCAN_H
 #define SCAN_H
 
-#include <vector>
-
 #include "common.h"
 
-// The only purpose of scan class is
-//  to return Tokenized source code
-class scan {
+// The only purpose of scan namespace is
+//  to return Tokenized source code.
+namespace scan {
 
-    public:
-        // Make scan a functor
-        //  that takes source code in unit of words
-        common::Tokens operator() (const common::Lines &lines);
+        // Take source file in unit of words and tokenize it.
+        common::Tokens tokenize(common::Lines const& lines);
 
-    private:
-        common::Tokens tokens;
-
-};
-
-static scan SCAN;
+}
 
 #endif

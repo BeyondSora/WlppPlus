@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "common.h"
 #include "file.h"
 #include "scan.h"
 
@@ -11,11 +12,24 @@ run_main::~run_main() {}
 
 void run_main::run()
 {
-    common::Lines lines = file::toLines("common.h");
+    // Code for testing!!
+    //
+    //
+
+    common::Lines lines = file::toLines("test.wlpp");
 
     for (unsigned i = 0; i < lines.size(); ++i) {
-        std::cout << lines[i] << std::endl;
+        //std::cout << lines[i] << std::endl;
     }
 
-    common::Tokens tokens = SCAN(lines);
+    common::Tokens tokens = scan::tokenize(lines);
+
+    std::cout << "SUCCEEDED" << std::endl;
+
+    for (unsigned i = 0; i < tokens.size(); ++i) {
+        for (unsigned j = 0; j < tokens[i].size(); ++j) {
+            std::cout << tokens[i][j].lexeme << " ";
+        }
+        std::cout << std::endl;
+    }
 }

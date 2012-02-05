@@ -1,34 +1,19 @@
 /******************************************************************************
- * This file class is only for opening and closing files.
+ * This namespace is for opening/closing and modifying files.
  *
- * All members are static.
- *
- * Do NOT initialize an instance of this class !!!
- *  Treat this class as a namespace.
+ * More implementation details are placed in .cc file,
+ *  but end users should have no need for those.
  ******************************************************************************/
 
 #ifndef FILE_H
 #define FILE_H
 
-#include <iostream>
-#include <fstream>
-
 #include "common.h"
 
-enum Errorcode {
-    FILE_CANNOT_OPEN,
-    FILE_CANNOT_CLOSE
-};
+namespace file {
 
-class file {
+    common::Lines toLines(std::string const& filename);
 
-    public:
-        static common::Lines toLines(std::string filename);
-
-    private:
-        static void err(Errorcode e, std::string msg);
-        static void toLines(std::ifstream &ifs, common::Lines &lines);
-
-};
+}
 
 #endif
