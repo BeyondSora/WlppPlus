@@ -69,7 +69,7 @@ struct Token {
     Kind kind;
     std::string lexeme;
 
-    std::string getID();    // Only for ID tokens
+    std::string getKind();
     int toInt();            // Only for INT tokens
 };
 

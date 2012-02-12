@@ -28,7 +28,12 @@ void run_main::run()
 
     for (unsigned i = 0; i < tokens.size(); ++i) {
         for (unsigned j = 0; j < tokens[i].size(); ++j) {
-            std::cout << tokens[i][j].lexeme << " ";
+            //std::cout << tokens[i][j].lexeme << " ";
+            std::cout << tokens[i][j].getKind() << ": " <<
+                         tokens[i][j].lexeme;
+            if (tokens[i][j].kind == common::INT)
+                std::cout << ", number-form: " << tokens[i][j].toInt();
+            std::cout << std::endl;
         }
         std::cout << std::endl;
     }

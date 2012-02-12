@@ -1,6 +1,5 @@
 #include "scan.h"
 
-
 #define WHITESPACES     "\t\n\r "
 #define LETTERS         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 #define DIGITS          "0123456789"
@@ -101,6 +100,7 @@ static bool initT_done = false;
 // Initialize Transition Table for the compiler on first call.
 void initT();
 void setT(State from, std::string chars, State to);
+void setKind(common::Token& token);
 
 // Tokenize one line of source code.
 common::TokenLine lineTokenize(std::string const& line);
@@ -128,7 +128,7 @@ void initT() {
     }
 
     // Non-null transitions of the finite state machine.
-    // NB: in the third line below, letters digits are macros
+    // NB: in the fourth line below, letters digits are macros
     //  that are replaced by string literals, which the compiler
     //  will concatenate into a single string literal.
     setT ( ST_START,      WHITESPACES,    ST_WHITESPACE );
@@ -207,6 +207,7 @@ common::TokenLine lineTokenize(std::string const& line)
                     common::Token token;
                     token.lexeme = line.substr(startIndex, i - startIndex);
                     token.kind = stateKinds[state];
+                    setKind(token);
                     tokenLine.push_back(token);
                 }
 
@@ -225,6 +226,15 @@ common::TokenLine lineTokenize(std::string const& line)
     }
 
     return tokenLine;
+}
+
+void setKind(common::Token& token)
+{
+    if      (token.lexeme == "wain")    token.kind = common::WAIN;
+    else if (token.lexeme == "if")      token.kind = common::IF;
+    else if (token.lexeme == "else")    token.kind = common::ELSE;
+    else if (token.lexeme == "while")   token.kind = common::WHILE;
+    else if (token.lexeme == "return")  token.kind = common::RETURN;
 }
 
 }
