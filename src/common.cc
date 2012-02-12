@@ -1,10 +1,13 @@
 #include "common.h"
 
-#include <assert.h>
-
+#include <cassert>
 #include <cstdlib>
 
 namespace common {
+
+enum Errcode {
+    NOT_AN_INT,
+};
 
 //
 // Token struct's member functions:
@@ -20,6 +23,9 @@ std::string Token::getKind()
         case ELSE:          kindString = "ELSE";        break;
         case WHILE:         kindString = "WHILE";       break;
         case RETURN:        kindString = "RETURN";      break;
+        case INTK:          kindString = "INTK";        break;
+        case CHARK:         kindString = "CHARK";       break;
+        case CHAR:          kindString = "CHAR";        break;
         case INT:           kindString = "INT";         break;
         case LPAREN:        kindString = "LPAREN";      break;
         case RPAREN:        kindString = "RPAREN";      break;
@@ -55,6 +61,7 @@ int Token::toInt()
 {
     int integer = 0;
     if (this->kind == INT) integer = std::atoi(this->lexeme.c_str());
+    else throw NOT_AN_INT;
     return integer;
 }
 //

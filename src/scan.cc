@@ -2,8 +2,11 @@
 
 #define WHITESPACES     "\t\n\r "
 #define LETTERS         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-#define DIGITS          "0123456789"
 #define ONE_TO_NINE     "123456789"
+#define DIGITS          ONE_TO_NINE "0"
+// ASCII needs to be redefined properly in the future
+#define ASCII           WHITESPACES LETTERS DIGITS \
+                        "\",.(){}[]~`!@#$%^&*_-+=*/\\"
 
 namespace scan {
 
@@ -17,6 +20,12 @@ enum State {
 
     ST_INT,         // INT
     ST_ZERO,        // 0
+
+    ST_LSQUOTE,     // first '
+    ST_CHAR_I,      // CHAR, but this is an intermediate state
+    ST_CHAR,        // second '
+                    // A char must be enclosed between  ' '
+
 
     ST_LPAREN,      // (
     ST_RPAREN,      // )
@@ -60,6 +69,10 @@ static common::Kind const stateKinds[] = {
 
     common::INT,            // INT
     common::INT,            // 0
+
+    common::NUL,            // first '
+    common::NUL,            // second '
+    common::CHAR,           // CHAR
 
     common::LPAREN,         // (
     common::RPAREN,         // )
@@ -131,38 +144,40 @@ void initT() {
     // NB: in the fourth line below, letters digits are macros
     //  that are replaced by string literals, which the compiler
     //  will concatenate into a single string literal.
-    setT ( ST_START,      WHITESPACES,    ST_WHITESPACE );
-    setT ( ST_WHITESPACE, WHITESPACES,    ST_WHITESPACE );
-    setT ( ST_START,      LETTERS,        ST_ID         );
-    setT ( ST_ID,         LETTERS DIGITS, ST_ID         );
-    setT ( ST_START,      "0",            ST_ZERO       );
-    setT ( ST_START,      ONE_TO_NINE,    ST_INT        );
-    setT ( ST_INT,        DIGITS,         ST_INT        );
-    setT ( ST_START,      "-",            ST_MINUS      );
-    setT ( ST_START,      "+",            ST_PLUS       );
-    setT ( ST_START,      "*",            ST_STAR       );
-    setT ( ST_START,      "/",            ST_SLASH      );
-    setT ( ST_SLASH,      "/",            ST_COMMENT    );
-    setT ( ST_START,      "%",            ST_PCT        );
-    setT ( ST_START,      ";",            ST_SEMI       );
-    setT ( ST_START,      ",",            ST_COMMA      );
-    setT ( ST_START,      "(",            ST_LPAREN     );
-    setT ( ST_START,      ")",            ST_RPAREN     );
-    setT ( ST_START,      "{",            ST_LBRACE     );
-    setT ( ST_START,      "}",            ST_RBRACE     );
-    setT ( ST_START,      "[",            ST_LBRACK     );
-    setT ( ST_START,      "]",            ST_RBRACK     );
-    setT ( ST_START,      "&",            ST_AMP        );
-    setT ( ST_AMP,        "&",            ST_AND        );
-    setT ( ST_START,      "=",            ST_BECOMES    );
-    setT ( ST_BECOMES,    "=",            ST_EQ         );
-    setT ( ST_START,      "<",            ST_LT         );
-    setT ( ST_LT,         "=",            ST_LE         );
-    setT ( ST_START,      ">",            ST_GT         );
-    setT ( ST_GT,         "=",            ST_GE         );
-    setT ( ST_START,      "!",            ST_EX         );
-    setT ( ST_EX,         "=",            ST_NE         );
-
+    setT( ST_START,      WHITESPACES,    ST_WHITESPACE );
+    setT( ST_WHITESPACE, WHITESPACES,    ST_WHITESPACE );
+    setT( ST_START,      LETTERS,        ST_ID         );
+    setT( ST_ID,         LETTERS DIGITS, ST_ID         );
+    setT( ST_START,      "0",            ST_ZERO       );
+    setT( ST_START,      ONE_TO_NINE,    ST_INT        );
+    setT( ST_INT,        DIGITS,         ST_INT        );
+    setT( ST_START,      "\'",           ST_LSQUOTE    );
+    setT( ST_LSQUOTE,    ASCII,          ST_CHAR_I     );
+    setT( ST_CHAR_I,     "\'",           ST_CHAR       );
+    setT( ST_START,      "-",            ST_MINUS      );
+    setT( ST_START,      "+",            ST_PLUS       );
+    setT( ST_START,      "*",            ST_STAR       );
+    setT( ST_START,      "/",            ST_SLASH      );
+    setT( ST_SLASH,      "/",            ST_COMMENT    );
+    setT( ST_START,      "%",            ST_PCT        );
+    setT( ST_START,      ";",            ST_SEMI       );
+    setT( ST_START,      ",",            ST_COMMA      );
+    setT( ST_START,      "(",            ST_LPAREN     );
+    setT( ST_START,      ")",            ST_RPAREN     );
+    setT( ST_START,      "{",            ST_LBRACE     );
+    setT( ST_START,      "}",            ST_RBRACE     );
+    setT( ST_START,      "[",            ST_LBRACK     );
+    setT( ST_START,      "]",            ST_RBRACK     );
+    setT( ST_START,      "&",            ST_AMP        );
+    setT( ST_AMP,        "&",            ST_AND        );
+    setT( ST_START,      "=",            ST_BECOMES    );
+    setT( ST_BECOMES,    "=",            ST_EQ         );
+    setT( ST_START,      "<",            ST_LT         );
+    setT( ST_LT,         "=",            ST_LE         );
+    setT( ST_START,      ">",            ST_GT         );
+    setT( ST_GT,         "=",            ST_GE         );
+    setT( ST_START,      "!",            ST_EX         );
+    setT( ST_EX,         "=",            ST_NE         );
 
     for (unsigned i = 0; i < 256; ++i) {
         delta[ST_COMMENT][i] = ST_COMMENT;
@@ -230,11 +245,15 @@ common::TokenLine lineTokenize(std::string const& line)
 
 void setKind(common::Token& token)
 {
-    if      (token.lexeme == "wain")    token.kind = common::WAIN;
-    else if (token.lexeme == "if")      token.kind = common::IF;
-    else if (token.lexeme == "else")    token.kind = common::ELSE;
-    else if (token.lexeme == "while")   token.kind = common::WHILE;
-    else if (token.lexeme == "return")  token.kind = common::RETURN;
+    if      (token.lexeme == "wain")        token.kind = common::WAIN;
+    else if (token.lexeme == "if")          token.kind = common::IF;
+    else if (token.lexeme == "else")        token.kind = common::ELSE;
+    else if (token.lexeme == "while")       token.kind = common::WHILE;
+    else if (token.lexeme == "return")      token.kind = common::RETURN;
+    else if (token.lexeme == "int")         token.kind = common::INTK;
+    else if (token.lexeme == "char")        token.kind = common::CHARK;
+
+    if      (token.kind == common::CHAR)    token.lexeme = token.lexeme[1];
 }
 
 }

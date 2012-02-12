@@ -8,8 +8,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <stdlib.h>
-
 #include <string>
 #include <vector>
 
@@ -27,8 +25,11 @@ enum Kind {
     ELSE,       // else
     WHILE,      // while
     RETURN,     // return
+    INTK,       // int
+    CHARK,      // char
 
-    INT,        // Integers
+    INT,        // Integer
+    CHAR,       // Character
 
     LPAREN,     // (
     RPAREN,     // )
