@@ -19,7 +19,7 @@ enum DerivationRule {
 extern class tree;
 
 class treePtr {
-}
+};
 
 }
 
