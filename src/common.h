@@ -2,7 +2,8 @@
  * Everything shared across classes, namespaces and such is
  *  included in this common namespace.
  *
- * Include this header in every other class/namespace.
+ * Include this header as the first one of local headers
+ *  in every other class/namespace.
  ******************************************************************************/
 
 #ifndef COMMON_H
@@ -81,4 +82,4 @@ std::string toString(int num);
 
 }
 
-#endif
+#endif//COMMON_H

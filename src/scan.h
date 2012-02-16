@@ -19,4 +19,4 @@ common::Tokens tokenize(common::Lines const& lines);
 
 }
 
-#endif
+#endif//SCAN_H

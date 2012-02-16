@@ -16,4 +16,4 @@ common::Lines toLines(std::string const& filename);
 
 }
 
-#endif
+#endif//FILE_H
