@@ -5,7 +5,7 @@ SRCDIR=src
 BUILDDIR=build
 
 
-compile:
+build:
 	$(CXX) $(CXXFLAGS) $(SRCDIR)/* -o $(BUILDDIR)/compiler
 
 clean:
