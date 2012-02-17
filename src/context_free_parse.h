@@ -14,7 +14,9 @@
 
 namespace context_free_parse {
 
-void build_parse_tree();
+using namespace parse_common;
+
+Tree* build_parse_tree(common::Tokens &tokens);
 
 }
 

@@ -93,7 +93,6 @@ class Tree {
     public:
         Tree();
         ~Tree();
-        std::string getRule();
         Tree* getLeaf(int i);
         std::string getID();    // Only terminal symbols have identifiers
 

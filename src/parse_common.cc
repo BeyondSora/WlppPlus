@@ -10,11 +10,25 @@ Tree::~Tree()
         delete this->leaves[i];
 }
 
-std::string Tree::getRule()
+inline Tree* Tree::getLeaf(int i)
 {
+    return this->leaves.at(i);
+}
+
+inline std::string Tree::getID()
+{
+    std::string id;
     switch (this->rule) {
-        default: throw "No such rule defined!\n"; break;
+        default: throw "Not a terminal symbol\n"; break;
+
+        case Ftor_Exp_Id:       // fall-through
+        case Ftor_Exp_Int:      // fall-through
+        case Ftor_Exp_Char:     // fall-through
+        case Lval_Exp_Id:
+                 id = this->units[1];
+                 break;
     }
+    return id;
 }
 
 }
