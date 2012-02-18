@@ -17,15 +17,16 @@ namespace parse_common {
 //  this section defines the grammar of WlppPlus.
 //
 // Terminal symbols: the set of valid tokens as defined in common::Kind
-// Non-Terminal symbols: Start, BOF, EOF, procedures, procedure, type,
-//                       dcls, dcl, statements, statement, tests, test,
-//                       expr, term, term, lvalue.
+//                   and BOF & EOF.
+// Non-Terminal symbols: Start, proceduresAll, procedureWain, procedures, procedure,
+//                       type, dcls, dcl, statements, statement, tests, test,
+//                       expr, term, factor, lvalue.
 // Start symbol: Start
 // Production Rules: as defined below
 enum ProductionRule {
     Start_Exp_Proc,         // Start -> BOF procedures EOF
 
-    Procs_Exp_ProcW_Procs,  // procedures -> procedureWain procedures
+    Procs_Exp_ProcW_Procs,  // proceduresAll -> procedureWain procedures
     Procs_Exp_Procs_Proc,   // procedures -> procedures procedure
     Procs_Exp_Nothing,      // procedures -> Nothing
 
@@ -50,14 +51,16 @@ enum ProductionRule {
 
     Stmnts_Exp_Stmnts_Stmnt,// statements -> statements statement
     Stmnts_Exp_Nothing,     // statements -> NULL
-    Stmnt_Exp_Assign,       // statements -> lvalue BECOMES expr SEMI
-    Stmnt_Exp_If,           // statements -> IF LPAREN tests AND test RPAREN
+    Stmnt_Exp_Assign,       // statement -> lvalue BECOMES expr SEMI
+    Stmnt_Exp_If,           // statement -> IF LPAREN tests AND test RPAREN
+                            //               LBRACE statements RBRACE
+    Stmnt_Exp_If_ELSE,      // statement -> IF LPAREN tests AND test RPAREN
                             //               LBRACE statements RBRACE
                             //               ELSE LBRACE statements RBRACE
-    Stmnt_Exp_While,        // statements -> WHILE LPAREN tests AND test RPAREN
+    Stmnt_Exp_While,        // statement -> WHILE LPAREN tests AND test RPAREN
                             //               LBRACE statements RBRACE
 
-    Tests_Exp_Tests_Test,   // tests -> tests and test
+    Tests_Exp_Tests_Test,   // tests -> tests AND test
     Tests_Exp_Nothing,      // tests -> Nothing
 
     Test_Exp_Eq,            // test -> expr EQ expr
@@ -79,7 +82,7 @@ enum ProductionRule {
     Ftor_Exp_Id,            // factor -> ID
     Ftor_Exp_Int,           // factor -> INT
     Ftor_Exp_Char,          // factor -> CHAR
-    Ftor_Exp_Null,          // factor -> NULL
+    Ftor_Exp_Null,          // factor -> NUL
     Ftor_Exp_Expr,          // factor -> LPAREN expr RPAREN
     Ftor_Exp_Addr,          // factor -> AMP lvalue
     Ftor_Exp_Ptr,           // factor -> STAR factor
