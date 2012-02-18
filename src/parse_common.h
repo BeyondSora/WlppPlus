@@ -22,14 +22,14 @@ namespace parse_common {
 //                       expr, term, term, lvalue.
 // Start symbol: Start
 // Production Rules: as defined below
-enum DerivationRule {
+enum ProductionRule {
     Start_Exp_Proc,         // Start -> BOF procedures EOF
 
     Procs_Exp_ProcW_Procs,  // procedures -> procedureWain procedures
     Procs_Exp_Procs_Proc,   // procedures -> procedures procedure
     Procs_Exp_Nothing,      // procedures -> Nothing
 
-    ProcWain_Exp,           // procedureWain -> INTK WAIN LPAREN dcls RPAREN
+    ProcW_Exp,              // procedureWain -> INTK WAIN LPAREN dcls RPAREN
                             //                  LBRACE
                             //                  dcls statements RETURN expr SEMI
                             //                  RBRACE
@@ -97,7 +97,7 @@ class Tree {
         std::string getID();    // Only terminal symbols have identifiers
 
     private:
-        DerivationRule rule;
+        ProductionRule rule;
         std::vector<std::string> units;
         std::vector<Tree*> leaves;
 };
