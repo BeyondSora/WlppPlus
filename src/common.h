@@ -19,6 +19,7 @@ typedef std::vector<std::string> Lines;
 // Each token has one of the following kinds
 //  corresponding to lexical syntax of Wlpp+.
 enum Kind {
+    // Terminal symbols
     ID,         // Any identifier that is not a reserved keyword
 
     WAIN,       // wain
@@ -64,6 +65,27 @@ enum Kind {
     WHITESPACE, // Whitespace
 
     NUL,        // Bad/invalid token
+
+    bof,
+    eof,
+
+    // Non-terminal symbols
+    Start,
+    proceduresAll,
+    procedures,
+    procedureWain,
+    procedure,
+    type,
+    dcls,
+    dcl,
+    statements,
+    statement,
+    tests,
+    test,
+    expr,
+    term,
+    factor,
+    lvalue,
 };
 
 // Atomic unit for Wlpp+

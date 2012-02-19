@@ -14,7 +14,27 @@
 
 namespace context_free_parse {
 
-using namespace parse_common;
+using namespace parse_common;   // Use parse_common here,
+                                //  because it is like a parent namespace
+
+// LR1ParseRuleType determines which action the rule follows
+// Reduce: Terminal or lower level non-terminal symbols are
+//          reduced to a higher level non-terminal symbol
+// Shift: Current symbol is shifted to the left.
+enum LR1ParseRuleType {
+    REDUCE,
+    SHIFT,
+};
+
+// Rules for LR1 parsing
+struct LR1ParseRule {
+    LR1ParseRuleType type;
+    unsigned curState;
+    common::Kind sym;   // Sym applies to non-terminal symbol when type = SHIFT
+                        //  when type = REDUCE, only terminal symbol!
+    unsigned next;      // Next applies to next state when type = SHIFT
+                        //  when type = REDUCE, production rule!
+};
 
 Tree* build_parse_tree(common::Tokens &tokens);
 
