@@ -6,13 +6,13 @@ Tree::Tree() {}
 
 Tree::~Tree()
 {
-    for (unsigned i = 0; i < this->leaves.size(); ++i)
-        delete this->leaves[i];
+    for (unsigned i = 0; i < this->subTrees.size(); ++i)
+        delete this->subTrees[i];
 }
 
-inline Tree* Tree::getLeaf(int i)
+inline Tree* Tree::getSubTree(int i)
 {
-    return this->leaves.at(i);
+    return this->subTrees.at(i);
 }
 
 inline std::string Tree::getID()

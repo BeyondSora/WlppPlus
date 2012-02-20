@@ -18,9 +18,9 @@ namespace parse_common {
 //
 // Terminal symbols: the set of valid tokens as defined in common::Kind
 //                   and BOF & EOF.
-// Non-Terminal symbols: Start, proceduresAll, procedureWain, procedures, procedure,
-//                       type, dcls, dcl, statements, statement, tests, test,
-//                       expr, term, factor, lvalue.
+// Non-Terminal symbols: Start, proceduresAll, procedureWain, procedures,
+//                       procedure, type, dcls, dcl, statements, statement,
+//                       tests, test, expr, term, factor, lvalue.
 // Start symbol: Start
 // Production Rules: as defined below
 enum ProductionRule {
@@ -96,13 +96,13 @@ class Tree {
     public:
         Tree();
         ~Tree();
-        Tree* getLeaf(int i);
+        Tree* getSubTree(int i);
         std::string getID();    // Only terminal symbols have identifiers
 
     private:
         ProductionRule rule;
         std::vector<std::string> units;
-        std::vector<Tree*> leaves;
+        std::vector<Tree*> subTrees;
 };
 
 }

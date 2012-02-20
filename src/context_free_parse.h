@@ -29,14 +29,14 @@ enum LR1ParseRuleType {
 // Rules for LR1 parsing
 struct LR1ParseRule {
     LR1ParseRuleType type;
-    unsigned curState;
+    unsigned state;
     common::Kind sym;   // Sym applies to non-terminal symbol when type = SHIFT
                         //  when type = REDUCE, only terminal symbol!
     unsigned next;      // Next applies to next state when type = SHIFT
                         //  when type = REDUCE, production rule!
 };
 
-Tree* build_parse_tree(common::Tokens &tokens);
+Tree* build_parse_tree(const common::Tokens &tokens);
 
 }
 

@@ -11,10 +11,11 @@
 
 namespace lr1_rules {
 
-const unsigned lr1_rules_size = 733;
+const unsigned LR1_RULES_SIZE = 733;    // Number of LR1 parse rules
 
-const context_free_parse::LR1ParseRule lr1_rules[] = {
+const context_free_parse::LR1ParseRule LR1_RULES[LR1_RULES_SIZE] = {
     // Initialize lr_rules with all LR1 Parse Rules
+    // type | curState | sym | next
     { context_free_parse::REDUCE, 96, common::NE, 39 },
     { context_free_parse::REDUCE, 7, common::NE, 40 },
     { context_free_parse::REDUCE, 48, common::NE, 38 },
