@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include "common.h"
+
 namespace parse_common {
 
 // The heart of parsing :-)
@@ -24,7 +26,7 @@ namespace parse_common {
 // Start symbol: Start
 // Production Rules: as defined below
 enum ProductionRule {
-    Start_Exp_Proc,         // Start -> BOF procedures EOF
+    Start_Exp_Proc,         // Start -> bof procedures eof
 
     Procs_Exp_ProcW_Procs,  // proceduresAll -> procedureWain procedures
     Procs_Exp_Procs_Proc,   // procedures -> procedures procedure
@@ -50,11 +52,11 @@ enum ProductionRule {
     Dcl_Exp,                // dcl -> type ID
 
     Stmnts_Exp_Stmnts_Stmnt,// statements -> statements statement
-    Stmnts_Exp_Nothing,     // statements -> NULL
+    Stmnts_Exp_Nothing,     // statements -> Nothing
     Stmnt_Exp_Assign,       // statement -> lvalue BECOMES expr SEMI
     Stmnt_Exp_If,           // statement -> IF LPAREN tests AND test RPAREN
                             //               LBRACE statements RBRACE
-    Stmnt_Exp_If_ELSE,      // statement -> IF LPAREN tests AND test RPAREN
+    Stmnt_Exp_If_Else,      // statement -> IF LPAREN tests AND test RPAREN
                             //               LBRACE statements RBRACE
                             //               ELSE LBRACE statements RBRACE
     Stmnt_Exp_While,        // statement -> WHILE LPAREN tests AND test RPAREN
@@ -64,11 +66,11 @@ enum ProductionRule {
     Tests_Exp_Nothing,      // tests -> Nothing
 
     Test_Exp_Eq,            // test -> expr EQ expr
-    Test_Exp_NE,            // test -> expr NE expr
-    Test_Exp_LT,            // test -> expr LT expr
-    Test_Exp_LE,            // test -> expr LE expr
-    Test_Exp_GE,            // test -> expr GE expr
-    Test_Exp_GT,            // test -> expr GT expr
+    Test_Exp_Ne,            // test -> expr NE expr
+    Test_Exp_Lt,            // test -> expr LT expr
+    Test_Exp_Le,            // test -> expr LE expr
+    Test_Exp_Ge,            // test -> expr GE expr
+    Test_Exp_Gt,            // test -> expr GT expr
 
     Expr_Exp_Term,          // expr -> term
     Expr_Exp_Plus,          // expr -> expr PLUS term
@@ -82,7 +84,7 @@ enum ProductionRule {
     Ftor_Exp_Id,            // factor -> ID
     Ftor_Exp_Int,           // factor -> INT
     Ftor_Exp_Char,          // factor -> CHAR
-    Ftor_Exp_Null,          // factor -> NUL
+    Ftor_Exp_Nul,           // factor -> NUL
     Ftor_Exp_Expr,          // factor -> LPAREN expr RPAREN
     Ftor_Exp_Addr,          // factor -> AMP lvalue
     Ftor_Exp_Ptr,           // factor -> STAR factor
@@ -92,11 +94,20 @@ enum ProductionRule {
     Lval_Exp_Lval,          // lvalue -> LPAREN lvalue RPAREN
 };
 
+// Convert ProductionRule to string
+std::string translateProductionRule(const ProductionRule &rule);
+
+// Get the number of states/symbols that need to be stepped back for reduction
+unsigned getReductionSize(const ProductionRule &rule);
+
+// Get common::Kind after reducing the production rule
+common::Kind getReductionKind(const ProductionRule &rule);
+
 class Tree {
     public:
         Tree();
         ~Tree();
-        Tree* getSubTree(int i);
+        Tree* getSubTree(const unsigned &i);
         std::string getID();    // Only terminal symbols have identifiers
 
     private:

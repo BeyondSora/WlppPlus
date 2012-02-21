@@ -4,6 +4,7 @@
 
 #include "common.h"
 
+#include "context_free_parse.h"
 #include "file.h"
 #include "scan.h"
 
@@ -38,4 +39,8 @@ void run_main::run()
         }
         std::cout << std::endl;
     }
+
+    std::cout << "----PARSE TREE: \n";
+
+    context_free_parse::build_parse_tree(tokens);
 }
