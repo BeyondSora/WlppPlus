@@ -49,7 +49,7 @@ std::string translateProductionRule(const ProductionRule &rule)
             translation = "type CHARK STAR";
             break;
         case Dcls_Exp_Assign:
-            translation = "dcls dcls dcl BECOMES expr SEMI";
+            translation = "dcls dcls COMMA dcl BECOMES expr SEMI";
             break;
         case Dcls_Exp_NoAssign:
             translation = "dcls dcl SEMI";

@@ -46,7 +46,7 @@ enum ProductionRule {
     Type_Exp_Chark,         // type -> CHARK
     Type_Exp_CharkStar,     // type -> CHARK STAR
 
-    Dcls_Exp_Assign,        // dcls -> dcls dcl BECOMES expr SEMI
+    Dcls_Exp_Assign,        // dcls -> dcls COMMA dcl BECOMES expr SEMI
     Dcls_Exp_NoAssign,      // dcls -> dcls dcl SEMI
     Dcls_Exp_Nothing,       // dcls -> Nothing
     Dcl_Exp,                // dcl -> type ID
