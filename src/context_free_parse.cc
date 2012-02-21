@@ -233,7 +233,7 @@ Tree* build_parse_tree(const common::Tokens &tokens)
             case REDUCE:
                 std::cout << lr1Rule.next << std::endl;
                 std::cout << translateProductionRule(
-                             (ProductionRule)(lr1Rule.next - 1));
+                             (ProductionRule)(lr1Rule.next));
                 std::cout << std::endl;
 
 
