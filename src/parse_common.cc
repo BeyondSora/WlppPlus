@@ -24,14 +24,14 @@ std::string translateProductionRule(const ProductionRule &rule)
             break;
         case ProcW_Exp:
             translation = "procedureWain "
-                          "INTK WAIN LPAREN dcls RPAREN "
+                          "INTK WAIN LPAREN dcl COMMA dcl RPAREN "
                           "LBRACE "
                           "dcls statements RETURN expr SEMI "
                           "RBRACE";
             break;
         case Proc_Exp:
             translation = "procedure "
-                          "type ID LPAREN dcls RPAREN "
+                          "type ID LPAREN dcl COMMA dcl RPAREN "
                           "LBRACE "
                           "dcls statements RETURN expr SEMI "
                           "RBRACE";
@@ -49,10 +49,10 @@ std::string translateProductionRule(const ProductionRule &rule)
             translation = "type CHARK STAR";
             break;
         case Dcls_Exp_Assign:
-            translation = "dcls dcls COMMA dcl BECOMES expr SEMI";
+            translation = "dcls dcls dcl BECOMES expr SEMI";
             break;
         case Dcls_Exp_NoAssign:
-            translation = "dcls dcl SEMI";
+            translation = "dcls dcls dcl SEMI";
             break;
         case Dcls_Exp_Nothing:
             translation = "dcls";

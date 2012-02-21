@@ -14,7 +14,7 @@
 
 using namespace std;
 
-const string LR1_RULES_SIZE = "716";
+const string LR1_RULES_SIZE = "692";
 
 int main()
 {

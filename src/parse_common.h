@@ -32,11 +32,11 @@ enum ProductionRule {
     Procs_Exp_Procs_Proc,   // procedures -> procedures procedure
     Procs_Exp_Nothing,      // procedures -> Nothing
 
-    ProcW_Exp,              // procedureWain -> INTK WAIN LPAREN dcls RPAREN
+    ProcW_Exp,              // procedureWain -> INTK WAIN LPAREN dcl COMMA dcl RPAREN
                             //                  LBRACE
                             //                  dcls statements RETURN expr SEMI
                             //                  RBRACE
-    Proc_Exp,               // procedure -> type ID LPAREN dcls RPAREN
+    Proc_Exp,               // procedure -> type ID LPAREN dcl COMMA dcl RPAREN
                             //              LBRACE
                             //              dcls statements RETURN expr SEMI
                             //              RBRACE
@@ -46,7 +46,7 @@ enum ProductionRule {
     Type_Exp_Chark,         // type -> CHARK
     Type_Exp_CharkStar,     // type -> CHARK STAR
 
-    Dcls_Exp_Assign,        // dcls -> dcls COMMA dcl BECOMES expr SEMI
+    Dcls_Exp_Assign,        // dcls -> dcls dcl BECOMES expr SEMI
     Dcls_Exp_NoAssign,      // dcls -> dcls dcl SEMI
     Dcls_Exp_Nothing,       // dcls -> Nothing
     Dcl_Exp,                // dcl -> type ID
