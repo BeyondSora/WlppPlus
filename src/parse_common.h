@@ -26,7 +26,7 @@ namespace parse_common {
 // Start symbol: Start
 // Production Rules: as defined below
 enum ProductionRule {
-    Start_Exp_Proc,         // Start -> bof procedures eof
+    Start_Exp_Proc,         // Start -> bof proceduresAll eof
 
     Procs_Exp_ProcW_Procs,  // proceduresAll -> procedureWain procedures
     Procs_Exp_Procs_Proc,   // procedures -> procedures procedure

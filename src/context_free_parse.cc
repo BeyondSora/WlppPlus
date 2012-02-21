@@ -75,12 +75,12 @@ unsigned getReductionSize(const ProductionRule &rule)
         case Stmnt_Exp_While:
             size = 9;
             break;
-        case ProcW_Exp: // fall-through
-        case Proc_Exp:
-            size = 12;
-            break;
         case Stmnt_Exp_If_Else:
             size = 13;
+            break;
+        case ProcW_Exp: // fall-through
+        case Proc_Exp:
+            size = 14;
             break;
     }
     return size;
@@ -214,27 +214,44 @@ Tree* build_parse_tree(const common::Tokens &tokens)
     Tree *curNode = new Tree();
     curNode->token.kind = common::Start;
 
+    bool test = false;
     for (unsigned i = 0; i < src.size(); ++i) {
         common::Token curToken = src[i];
-        curSym = curToken.kind;
+        if (!test) curSym = curToken.kind;
         LR1ParseRule lr1Rule = getLR1Rule(curState, curSym);
+
+        if (test == true) {
+            --i;
+        }
 
         Tree *newNode;
         switch (lr1Rule.type) {
             case SHIFT:
+                /*
                 newNode = new Tree();
                 newNode->token = curToken;
                 curNode->connect(newNode);
                 curNode = curNode->next;
+                */
 
+                statesStack.push_back(curState);
                 curState = lr1Rule.next;
 
                 break;
             case REDUCE:
-                std::cout << lr1Rule.next << std::endl;
                 std::cout << translateProductionRule(
-                             (ProductionRule)(lr1Rule.next));
+                             (ProductionRule)lr1Rule.next);
                 std::cout << std::endl;
+
+                unsigned size = getReductionSize((ProductionRule)lr1Rule.next);
+                i--;
+                for (; size > 0; --size) {
+                    curState = statesStack[statesStack.size() - 1];
+                    statesStack.pop_back();
+                }
+                curSym = getReductionKind((ProductionRule)lr1Rule.next);
+
+                test = true;
 
 
                 break;
