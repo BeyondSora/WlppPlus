@@ -97,12 +97,7 @@ enum ProductionRule {
 // Convert ProductionRule to string
 std::string translateProductionRule(const ProductionRule &rule);
 
-// Get the number of states/symbols that need to be stepped back for reduction
-unsigned getReductionSize(const ProductionRule &rule);
-
-// Get common::Kind after reducing the production rule
-common::Kind getReductionKind(const ProductionRule &rule);
-
+/*
 class Tree {
     public:
         Tree();
@@ -115,6 +110,7 @@ class Tree {
         std::vector<std::string> units;
         std::vector<Tree*> subTrees;
 };
+*/
 
 }
 

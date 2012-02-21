@@ -17,6 +17,12 @@ namespace context_free_parse {
 using namespace parse_common;   // Use parse_common here,
                                 //  because it is like a parent namespace
 
+// Get the number of states/symbols that need to be stepped back for reduction
+unsigned getReductionSize(const ProductionRule &rule);
+
+// Get common::Kind after reducing the production rule
+common::Kind getReductionKind(const ProductionRule &rule);
+
 // LR1ParseRuleType determines which action the rule follows
 // Reduce: Terminal or lower level non-terminal symbols are
 //          reduced to a higher level non-terminal symbol
@@ -34,6 +40,17 @@ struct LR1ParseRule {
                         //  when type = REDUCE, only terminal symbol!
     unsigned next;      // Next applies to next state when type = SHIFT
                         //  when type = REDUCE, production rule!
+};
+
+struct Tree {
+        common::Token token;
+        Tree *prev;
+        Tree *next;
+        Tree *down;
+
+        Tree();
+        ~Tree();
+        void connect(Tree *rhs);
 };
 
 Tree* build_parse_tree(const common::Tokens &tokens);
