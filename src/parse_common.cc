@@ -58,7 +58,7 @@ std::string translateProductionRule(const ProductionRule &rule)
             translation = "dcls";
             break;
         case Dcl_Exp:
-            translation = "type ID";
+            translation = "dcl type ID";
             break;
         case Stmnts_Exp_Stmnts_Stmnt:
             translation = "statements statements statement";

@@ -7,6 +7,8 @@
 #ifndef LR1_RULES_H
 #define LR1_RULES_H
 
+#include <cassert>
+
 #include "context_free_parse.h"
 
 namespace lr1_rules {
@@ -713,11 +715,15 @@ const context_free_parse::LR1ParseRule LR1_RULES[LR1_RULES_SIZE] = {
 context_free_parse::LR1ParseRule getLR1Rule(unsigned state, common::Kind sym)
 {
     context_free_parse::LR1ParseRule lr1Rule;
-    for (unsigned i = 0; i < LR1_RULES_SIZE; ++i) {
+    unsigned i = 0;
+    for (; i < LR1_RULES_SIZE; ++i) {
         if (state == LR1_RULES[i].state &&
-            sym == LR1_RULES[i].sym)
+            sym == LR1_RULES[i].sym) {
             lr1Rule = LR1_RULES[i];
+            break;
+        }
     }
+    if (i == LR1_RULES_SIZE) assert("lr1_rules::getLR1Rule - No rule found!\n");
     return lr1Rule;
 }
 

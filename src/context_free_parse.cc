@@ -222,6 +222,7 @@ Tree* build_parse_tree(const common::Tokens &tokens)
 
         if (test == true) {
             --i;
+            test = false;
         }
 
         Tree *newNode;
@@ -239,18 +240,25 @@ Tree* build_parse_tree(const common::Tokens &tokens)
 
                 break;
             case REDUCE:
+                /*
+                std::cout << "Current State: " << curState << std::endl;
+                std::cout << "Reduction: " << lr1Rule.next << std::endl;
+                std::cout << "States Stack: " << statesStack.size() << std::endl;
+                std::cout << "Current Token: " << curToken.getKind() << std::endl;
+                std::cout << "i: " << i << std::endl;
+                */
                 std::cout << translateProductionRule(
                              (ProductionRule)lr1Rule.next);
                 std::cout << std::endl;
 
                 unsigned size = getReductionSize((ProductionRule)lr1Rule.next);
-                i--;
                 for (; size > 0; --size) {
                     curState = statesStack[statesStack.size() - 1];
                     statesStack.pop_back();
                 }
                 curSym = getReductionKind((ProductionRule)lr1Rule.next);
 
+                i--;
                 test = true;
 
 
@@ -274,7 +282,7 @@ void tokensLinearize(std::vector<common::Token> &src,
             src.push_back(tokens[i][j]);
 
     common::Token eof = { common::eof, "eof" };
-    src.push_back(bof);
+    src.push_back(eof);
 }
 
 }
