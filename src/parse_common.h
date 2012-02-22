@@ -63,7 +63,7 @@ enum ProductionRule {
                             //               LBRACE statements RBRACE
 
     Tests_Exp_Tests_Test,   // tests -> tests AND test
-    Tests_Exp_Nothing,      // tests -> Nothing
+    Tests_Exp_Test,         // tests -> test
 
     Test_Exp_Eq,            // test -> expr EQ expr
     Test_Exp_Ne,            // test -> expr NE expr

@@ -1,14 +1,12 @@
 #include "parse_common.h"
 
-#include <cassert>
-
 namespace parse_common {
 
 std::string translateProductionRule(const ProductionRule &rule)
 {
     std::string translation;
     switch (rule) {
-        default: assert("Rule not found!\n"); break;
+        default: throw "Rule not found!\n"; break;
 
         case Start_Exp_Proc:
             translation = "Start bof proceduresAll eof";
@@ -71,25 +69,25 @@ std::string translateProductionRule(const ProductionRule &rule)
             break;
         case Stmnt_Exp_If:
             translation = "statement "
-                          "IF LPAREN tests AND test RPAREN "
+                          "IF LPAREN tests RPAREN "
                           "LBRACE statements RBRACE";
             break;
         case Stmnt_Exp_If_Else:
             translation = "statement "
-                          "IF LPAREN tests AND test RPAREN "
+                          "IF LPAREN tests RPAREN "
                           "LBRACE statements RBRACE "
                           "ELSE LBRACE statements RBRACE";
             break;
         case Stmnt_Exp_While:
             translation = "statement "
-                          "WHILE LPAREN tests AND test RPAREN "
+                          "WHILE LPAREN tests RPAREN "
                           "LBRACE statements RBRACE";
             break;
         case Tests_Exp_Tests_Test:
             translation = "tests tests AND test";
             break;
-        case Tests_Exp_Nothing:
-            translation = "tests";
+        case Tests_Exp_Test:
+            translation = "tests test";
             break;
         case Test_Exp_Eq:
             translation = "test expr EQ expr";

@@ -22,11 +22,11 @@ unsigned getReductionSize(const ProductionRule &rule)
         case Procs_Exp_Nothing:     // fall-through
         case Dcls_Exp_Nothing:      // fall-through
         case Stmnts_Exp_Nothing:    // fall-through
-        case Tests_Exp_Nothing:
             size = 0;
             break;
         case Type_Exp_Intk:     // fall-through
         case Type_Exp_Chark:    // fall-through
+        case Tests_Exp_Test:    // fall-through
         case Expr_Exp_Term:     // fall-through
         case Term_Exp_Ftor:     // fall-through
         case Ftor_Exp_Id:       // fall-through
@@ -73,10 +73,10 @@ unsigned getReductionSize(const ProductionRule &rule)
             break;
         case Stmnt_Exp_If:  // fall-through
         case Stmnt_Exp_While:
-            size = 9;
+            size = 7;
             break;
         case Stmnt_Exp_If_Else:
-            size = 13;
+            size = 11;
             break;
         case ProcW_Exp: // fall-through
         case Proc_Exp:
@@ -136,7 +136,7 @@ common::Kind getReductionKind(const ProductionRule &rule)
             kind = common::statement;
             break;
         case Tests_Exp_Tests_Test:  // fall-through
-        case Tests_Exp_Nothing:
+        case Tests_Exp_Test:        // fall-through
             kind = common::tests;
             break;
         case Test_Exp_Eq:   // fall-through
@@ -194,6 +194,7 @@ void Tree::connect(Tree *rhs)
 
 // Turn Tokens into one single line of tokenized input,
 //  and also prepends BOF and EOF to the source code.
+// All Common::COMMENT tokens are removed during this process.
 // Need some rework in the future to improve efficiency.
 void tokensLinearize(std::vector<common::Token> &src,
                      const common::Tokens &tokens);
@@ -279,7 +280,8 @@ void tokensLinearize(std::vector<common::Token> &src,
 
     for (unsigned i = 0; i < tokens.size(); ++i)
         for (unsigned j = 0; j < tokens[i].size(); ++j)
-            src.push_back(tokens[i][j]);
+            if (tokens[i][j].kind != common::COMMENT)
+                src.push_back(tokens[i][j]);
 
     common::Token eof = { common::eof, "eof" };
     src.push_back(eof);
