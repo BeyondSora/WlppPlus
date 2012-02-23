@@ -175,35 +175,35 @@ common::Kind getReductionKind(ProductionRule const& rule)
     return kind;
 }
 
-inline Tree::Tree() : prev(NULL), next(NULL), down(NULL) {}
+Tree::Tree() : prev(NULL), next(NULL), down(NULL) {}
 
-inline Tree::~Tree()
+Tree::~Tree()
 {
-    delete prev;
+    //delete prev;
     delete next;
     delete down;
 }
 
-inline void Tree::connect(Tree *rhs)
+void Tree::connect(Tree *rhs)
 {
     this->next = rhs;
     rhs->prev = this;
 }
 
-inline void Tree::disconnect(Tree *rhs)
+void Tree::disconnect(Tree *rhs)
 {
     this->next = NULL;
     rhs->prev = NULL;
 }
 
-inline TreePtr::TreePtr(Tree *tree) : tree_(tree) {}
+TreePtr::TreePtr(Tree *tree) : tree_(tree) {}
 
-inline TreePtr::~TreePtr()
+TreePtr::~TreePtr()
 {
     delete tree_;
 }
 
-inline Tree* TreePtr::operator*()
+Tree* TreePtr::operator*()
 {
     return tree_;
 }
@@ -260,17 +260,6 @@ Tree* build_parse_tree(common::Tokens const& tokens)
 
                 break;
             case REDUCE:
-                /*
-                std::cout << "Current State: " << curState << std::endl;
-                std::cout << "Reduction: " << lr1Rule.next << std::endl;
-                std::cout << "States Stack: " << statesStack.size() << std::endl;
-                std::cout << "Current Token: " << curToken.getKind() << std::endl;
-                std::cout << "i: " << i << std::endl;
-                std::cout << translateProductionRule(
-                             (ProductionRule)lr1Rule.next);
-                std::cout << std::endl;
-                */
-
                 curSym = getReductionKind((ProductionRule)lr1Rule.next);
 
                 unsigned size = getReductionSize((ProductionRule)lr1Rule.next);
