@@ -252,6 +252,7 @@ void setKind(common::Token& token)
     else if (token.lexeme == "return")      token.kind = common::RETURN;
     else if (token.lexeme == "int")         token.kind = common::INTK;
     else if (token.lexeme == "char")        token.kind = common::CHARK;
+    else if (token.lexeme == "NULL")        token.kind = common::NUL;
 
     if      (token.kind == common::CHAR)    token.lexeme = token.lexeme[1];
 }

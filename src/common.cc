@@ -17,6 +17,8 @@ std::string Token::getKind()
 
     switch (this->kind) {
         default:            assert(false);              break;
+
+        // Terminal
         case ID:            kindString = "ID";          break;
         case WAIN:          kindString = "WAIN";        break;
         case IF:            kindString = "IF";          break;
@@ -52,6 +54,62 @@ std::string Token::getKind()
         case COMMENT:       kindString = "COMMENT";     break;
         case WHITESPACE:    kindString = "WHITESPACE";  break;
         case NUL:           kindString = "NUL";         break;
+
+        // Non-terminal
+        case Start:
+            kindString = "Start";
+            break;
+        case bof:
+            kindString = "bof";
+            break;
+        case eof:
+            kindString = "eof";
+            break;
+        case proceduresAll:
+            kindString = "proceduresAll";
+            break;
+        case procedures:
+            kindString = "procedures";
+            break;
+        case procedureWain:
+            kindString = "procedureWain";
+            break;
+        case procedure:
+            kindString = "procedure";
+            break;
+        case type:
+            kindString = "type";
+            break;
+        case dcls:
+            kindString = "dcls";
+            break;
+        case dcl:
+            kindString = "dcl";
+            break;
+        case statements:
+            kindString = "statements";
+            break;
+        case statement:
+            kindString = "statement";
+            break;
+        case tests:
+            kindString = "tests";
+            break;
+        case test:
+            kindString = "test";
+            break;
+        case expr:
+            kindString = "expr";
+            break;
+        case term:
+            kindString = "term";
+            break;
+        case factor:
+            kindString = "factor";
+            break;
+        case lvalue:
+            kindString = "lvalue";
+            break;
     }
 
     return kindString;

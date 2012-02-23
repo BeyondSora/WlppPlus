@@ -1,0 +1,4 @@
+ToDo:
+
+1). Add a global Error catching mechanisam;
+     Throw anywhere, catch only once at only one place.
