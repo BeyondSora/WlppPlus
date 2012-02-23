@@ -25,4 +25,4 @@ instead of only writing a program that does only arithmetic operations.
 Functions are definitely coming to Wlpp+, but no function overloading; that
 is just too much C++ complexity.
 
-For more information regarding to the language, refer to files under doc/
+*For more information regarding to the language, refer to files under doc/
