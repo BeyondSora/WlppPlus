@@ -45,7 +45,8 @@ struct LR1ParseRule {
                         //  when type = REDUCE, production rule!
 };
 
-struct Tree {
+class Tree {
+    public:
         common::Token token;
         Tree *prev;
         Tree *next;
@@ -53,6 +54,7 @@ struct Tree {
 
         Tree();
         ~Tree();
+
         void connect(Tree *rhs);    // this->next <---> rhs->prev
         void disconnect(Tree *rhs); // this->next <-/-> rhs->prev
 };
