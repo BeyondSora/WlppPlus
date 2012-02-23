@@ -1,0 +1,101 @@
+A Brief Introduction to Wlpp+
+=============================
+This project aims to create a simple, ease to use language that is similar
+to C, while also acts as a very good exercise for myself. The idea came from
+the compiler project from my university class CS241, and the simple language
+we were required to implement - "Wlpp".
+
+Wlpp is a very simple language that is very much just a dumb-down version
+of C. In fact, a complete Wlpp program can work as a function in any C
+programs. Wlpp was created because the univsersity wanted something simple
+and easy for second year students to implement. However, simplicity is
+also Wlpp's biggest disadvantage. It is simply not enough to do anything
+more than writing a simple bubble sort or the likes. For example, it only
+supports two data types: int and int* ! So, I decided to add more firepower
+to the "toy" language to make it less like a toy, aka WLPP+ ! (^_^)
+
+Wlpp+ aims to be a lot more powerful than Wlpp and at the same time keep
+the simplicity of the original design purpose. First of all, a boolean type
+is added, along with char in the near future. I'm also considering adding
+char*, since it is definitely nice to be able to display meaningful messages
+instead of only writing a program that does only arithmetic operations.
+Functions are definitely coming to Wlpp+, but no function overloading; that
+is just too much C++ complexity.
+
+
+
+
+Wlpp+ Language Specification
+============================
+
+Index
+-----
+1. Lexical Syntax
+   - Reserved Keywords
+   - Reserved Symbols
+2. Context-free Syntax
+   - Terminal Symbols
+   - Non-terminal Symbols
+   - Start Symbol
+   - Production Rules
+
+
+1. Lexical Syntax
+-----------------
+
+    **********************************************************************
+    * Reserved keywords:            * Reserved Symbols:                  *
+    *                               *                                    *
+    * wain                          * (    ,    &                        *
+    * int                           * )    <    ;                        *
+    * char                          * {    >                             *
+    * if                            * }    *                             *
+    * else                          * [    /                             *
+    * while                         * ]    +                             *
+    * return                        * =    -                             *
+    * NULL                          * !    %                             *
+    **********************************************************************
+
+2. Context-free Syntax
+----------------------
+
+Terminal Symbol:
+
+    Symbol: Definition/Lexeme
+
+    WAIN:   wain
+    INTK:   int
+    CHARK:  char
+    IF:     if
+    ELSE:   else
+    WHILE:  while
+    RETURN: return
+    NUL:    NULL
+    ID:     A string consisting of a letter (in the range of a-z or A-Z)
+            followed by zero or more letters and digits (in the rage 0 - 9).
+            Valid ID cannot be any of the reserved keywords above.
+    INT:    An integer number (in the rage of 0 - 2^32)
+    CHAR:   An ASCII character
+    COMMENT://
+    LPAREN: (
+    RPAREN: )
+    LBRACE: {
+    RBRACE: }
+    LBRACK: [
+    RBRACK: ]
+    BECOMES:=
+    EQ:     ==
+    NE:     !=
+    LT:     <
+    GT:     >
+    LE:     <=
+    GE:     >=
+    PLUS:   +
+    MINUS:  -
+    STAR:   *
+    SLASH:  /
+    PCT:    %
+    AMP:    &
+    AND:    &&
+    COMMA:  ,
+    SEMI:   ;
