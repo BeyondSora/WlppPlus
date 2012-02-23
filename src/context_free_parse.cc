@@ -1,6 +1,5 @@
 #include "context_free_parse.h"
 
-#include <cassert>
 #include <iostream>
 
 #include "lr1_rules.h"
@@ -10,13 +9,13 @@ namespace context_free_parse {
 using namespace lr1_rules;  // LR1_RULES is only in another file
                             //  because of its large number of code.
 
-unsigned getReductionSize(const ProductionRule &rule)
+unsigned getReductionSize(ProductionRule const& rule)
 {
     unsigned size = 0;
     switch (rule) {
         default:
-            assert("parse_common::getReductionSize"
-                   " - Rule not found!\n");
+            throw "parse_common::getReductionSize"
+                  " - Rule not found!\n";
             break;
 
         case Procs_Exp_Nothing:     // fall-through
@@ -86,13 +85,13 @@ unsigned getReductionSize(const ProductionRule &rule)
     return size;
 }
 
-common::Kind getReductionKind(const ProductionRule &rule)
+common::Kind getReductionKind(ProductionRule const& rule)
 {
     common::Kind kind;
     switch (rule) {
         default:
-            assert("parse_common::getReductionKind"
-                   " - Rule not found!\n");
+            throw "parse_common::getReductionKind"
+                  " - Rule not found!\n";
             break;
 
         case Start_Exp_Proc:
@@ -185,11 +184,16 @@ inline Tree::~Tree()
     delete down;
 }
 
-void Tree::connect(Tree *rhs)
+inline void Tree::connect(Tree *rhs)
 {
-    assert(rhs != NULL);
     this->next = rhs;
     rhs->prev = this;
+}
+
+inline void Tree::disconnect(Tree *rhs)
+{
+    this->next = NULL;
+    rhs->prev = NULL;
 }
 
 // Turn Tokens into one single line of tokenized input,
@@ -197,23 +201,24 @@ void Tree::connect(Tree *rhs)
 // All Common::COMMENT tokens are removed during this process.
 // Need some rework in the future to improve efficiency.
 void tokensLinearize(std::vector<common::Token> &src,
-                     const common::Tokens &tokens);
+                     common::Tokens const& tokens);
 
 // Parsing method similar to the one I used in CS241 assignment 8.
 // Need to be revised in the future!!
-Tree* build_parse_tree(const common::Tokens &tokens)
+Tree* build_parse_tree(common::Tokens const& tokens)
 {
     std::vector<common::Token> src;
     tokensLinearize(src, tokens);
 
-    Tree *root = NULL;
+    Tree *root = new Tree();
 
     std::vector<unsigned> statesStack;
     common::Kind curSym;
     unsigned curState = 0;
 
-    Tree *curNode = new Tree();
-    curNode->token.kind = common::Start;
+    root->token.kind = common::Start;
+
+    Tree *curNode = root;
 
     bool test = false;
     for (unsigned i = 0; i < src.size(); ++i) {
@@ -222,22 +227,24 @@ Tree* build_parse_tree(const common::Tokens &tokens)
         LR1ParseRule lr1Rule = getLR1Rule(curState, curSym);
 
         if (test == true) {
-            --i;
+            i--;
             test = false;
         }
 
         Tree *newNode;
         switch (lr1Rule.type) {
             case SHIFT:
-                /*
-                newNode = new Tree();
-                newNode->token = curToken;
-                curNode->connect(newNode);
-                curNode = curNode->next;
-                */
+                if (curSym == curToken.kind) {
+                    newNode = new Tree();
+                    newNode->token = curToken;
+                    curNode->connect(newNode);
+                    curNode = curNode->next;
+                }
 
                 statesStack.push_back(curState);
+
                 curState = lr1Rule.next;
+
 
                 break;
             case REDUCE:
@@ -247,33 +254,44 @@ Tree* build_parse_tree(const common::Tokens &tokens)
                 std::cout << "States Stack: " << statesStack.size() << std::endl;
                 std::cout << "Current Token: " << curToken.getKind() << std::endl;
                 std::cout << "i: " << i << std::endl;
-                */
                 std::cout << translateProductionRule(
                              (ProductionRule)lr1Rule.next);
                 std::cout << std::endl;
+                */
+
+                curSym = getReductionKind((ProductionRule)lr1Rule.next);
 
                 unsigned size = getReductionSize((ProductionRule)lr1Rule.next);
                 for (; size > 0; --size) {
+                    curNode = curNode->prev;
+
                     curState = statesStack[statesStack.size() - 1];
                     statesStack.pop_back();
                 }
-                curSym = getReductionKind((ProductionRule)lr1Rule.next);
+
+                common::Token reducToken;
+                reducToken.kind = curSym;
+
+                newNode = new Tree();
+                newNode->token = reducToken;
+
+                newNode->down = curNode->next;
+
+                if (curNode->next != NULL) curNode->disconnect(curNode->next);
+                curNode->connect(newNode);
+                curNode = curNode->next;
 
                 i--;
                 test = true;
 
-
                 break;
         }
     }
-
-
-
     return root;
 }
 
 void tokensLinearize(std::vector<common::Token> &src,
-                     const common::Tokens &tokens)
+                     common::Tokens const& tokens)
 {
     common::Token bof = { common::bof, "bof" };
     src.push_back(bof);
@@ -285,6 +303,28 @@ void tokensLinearize(std::vector<common::Token> &src,
 
     common::Token eof = { common::eof, "eof" };
     src.push_back(eof);
+}
+
+void print_parse_tree(Tree *root)
+{
+    if (root != NULL) {
+        if (root->prev == NULL) {
+            for (Tree *it = root; it != NULL; it = it->next) {
+                std::cout << it->token.getKind() << " ";
+            }
+            std::cout << std::endl;
+        }
+        if (root->down != NULL)
+            if (root->down->prev == NULL) {
+                std::cout << root->token.getKind() << " ";
+            }
+            print_parse_tree(root->down);
+        if (root->next != NULL)
+            if (root->next->prev == NULL) {
+                std::cout << root->token.getKind() << " ";
+            }
+            print_parse_tree(root->next);
+    }
 }
 
 }

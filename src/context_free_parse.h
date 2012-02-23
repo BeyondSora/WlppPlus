@@ -18,10 +18,13 @@ using namespace parse_common;   // Use parse_common here,
                                 //  because it is like a parent namespace
 
 // Get the number of states/symbols that need to be stepped back for reduction
-unsigned getReductionSize(const ProductionRule &rule);
+unsigned getReductionSize(ProductionRule const& rule);
 
 // Get common::Kind after reducing the production rule
-common::Kind getReductionKind(const ProductionRule &rule);
+common::Kind getReductionKind(ProductionRule const& rule);
+
+// Convert non-terminal symbols in common::Kind into string.
+std::string translateNonTerminal(common::Kind const& kind);
 
 // LR1ParseRuleType determines which action the rule follows
 // Reduce: Terminal or lower level non-terminal symbols are
@@ -50,10 +53,15 @@ struct Tree {
 
         Tree();
         ~Tree();
-        void connect(Tree *rhs);
+        void connect(Tree *rhs);    // this->next <---> rhs->prev
+        void disconnect(Tree *rhs); // this->next <-/-> rhs->prev
 };
 
-Tree* build_parse_tree(const common::Tokens &tokens);
+// Build a tree structure for the source code.
+Tree* build_parse_tree(common::Tokens const& tokens);
+
+// Print out the tree structure in CFG form.
+void print_parse_tree(Tree *root);
 
 }
 

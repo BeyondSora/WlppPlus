@@ -41,6 +41,6 @@ void run_main::run()
     }
 
     std::cout << "----PARSE TREE: \n";
-
-    context_free_parse::build_parse_tree(tokens);
+    context_free_parse::Tree *root = context_free_parse::build_parse_tree(tokens);
+    context_free_parse::print_parse_tree(root);
 }
