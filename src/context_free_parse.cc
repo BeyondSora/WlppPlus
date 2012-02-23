@@ -196,6 +196,18 @@ inline void Tree::disconnect(Tree *rhs)
     rhs->prev = NULL;
 }
 
+inline TreePtr::TreePtr(Tree *tree) : tree_(tree) {}
+
+inline TreePtr::~TreePtr()
+{
+    delete tree_;
+}
+
+inline Tree* TreePtr::operator*()
+{
+    return tree_;
+}
+
 // Turn Tokens into one single line of tokenized input,
 //  and also prepends BOF and EOF to the source code.
 // All Common::COMMENT tokens are removed during this process.

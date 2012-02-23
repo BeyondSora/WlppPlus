@@ -97,21 +97,6 @@ enum ProductionRule {
 // Convert ProductionRule to string
 std::string translateProductionRule(const ProductionRule &rule);
 
-/*
-class Tree {
-    public:
-        Tree();
-        ~Tree();
-        Tree* getSubTree(const unsigned &i);
-        std::string getID();    // Only terminal symbols have identifiers
-
-    private:
-        ProductionRule rule;
-        std::vector<std::string> units;
-        std::vector<Tree*> subTrees;
-};
-*/
-
 }
 
 #endif//PARSE_COMMON_H

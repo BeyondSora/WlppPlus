@@ -57,6 +57,16 @@ struct Tree {
         void disconnect(Tree *rhs); // this->next <-/-> rhs->prev
 };
 
+class TreePtr {
+    public:
+        explicit TreePtr(Tree *tree);
+        ~TreePtr();
+
+        Tree* operator*();
+    private:
+        Tree *tree_;
+};
+
 // Build a tree structure for the source code.
 Tree* build_parse_tree(common::Tokens const& tokens);
 
