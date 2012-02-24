@@ -9,6 +9,192 @@ namespace context_free_parse {
 using namespace lr1_rules;  // LR1_RULES is only in another file
                             //  because of its large number of code.
 
+// Get the number of states/symbols that need to be stepped back for reduction
+unsigned getReductionSize(ProductionRule const& rule);
+
+// Get common::Kind after reducing the production rule
+common::Kind getReductionKind(ProductionRule const& rule);
+
+//
+// Tree class
+
+class Tree {
+    public:
+        common::Token token;
+        Tree *prev;
+        Tree *next;
+        Tree *down;
+
+        Tree();
+        ~Tree();
+
+        void connect(Tree *rhs);    // this->next <---> rhs->prev
+        void disconnect(Tree *rhs); // this->next <-/-> rhs->prev
+};
+
+Tree::Tree() : prev(NULL), next(NULL), down(NULL) {}
+
+Tree::~Tree()
+{
+    //delete prev;
+    delete next;
+    delete down;
+}
+
+void Tree::connect(Tree *rhs)
+{
+    this->next = rhs;
+    rhs->prev = this;
+}
+
+void Tree::disconnect(Tree *rhs)
+{
+    this->next = NULL;
+    rhs->prev = NULL;
+}
+
+///
+
+//
+// ParseTree class
+
+ParseTree::ParseTree(Tree *tree) : tree_(tree) {}
+
+ParseTree::ParseTree(common::Tokens const& tokens)
+{
+    tree_ = build_parse_tree(tokens);
+}
+
+ParseTree::~ParseTree()
+{
+    delete tree_;
+}
+
+Tree* ParseTree::operator*()
+{
+    return tree_;
+}
+
+void ParseTree::print()
+{
+    print_parse_tree(tree_);
+}
+
+// Parsing method similar to the one I used in CS241 assignment 8.
+// Need to be revised in the future!!
+Tree* ParseTree::build_parse_tree(common::Tokens const& tokens)
+{
+    std::vector<common::Token> src;
+    tokensLinearize(src, tokens);
+
+    Tree *root = new Tree();
+
+    std::vector<unsigned> statesStack;
+    common::Kind curSym;
+    unsigned curState = 0;
+
+    root->token.kind = common::Start;
+
+    Tree *curNode = root;
+
+    bool test = false;
+    for (unsigned i = 0; i < src.size(); ++i) {
+        common::Token curToken = src[i];
+        if (!test) curSym = curToken.kind;
+        LR1ParseRule lr1Rule = getLR1Rule(curState, curSym);
+
+        if (test == true) {
+            i--;
+            test = false;
+        }
+
+        Tree *newNode;
+        switch (lr1Rule.type) {
+            case SHIFT:
+                if (curSym == curToken.kind) {
+                    newNode = new Tree();
+                    newNode->token = curToken;
+                    curNode->connect(newNode);
+                    curNode = curNode->next;
+                }
+
+                statesStack.push_back(curState);
+
+                curState = lr1Rule.next;
+
+
+                break;
+            case REDUCE:
+                curSym = getReductionKind((ProductionRule)lr1Rule.next);
+
+                unsigned size = getReductionSize((ProductionRule)lr1Rule.next);
+                for (; size > 0; --size) {
+                    curNode = curNode->prev;
+
+                    curState = statesStack[statesStack.size() - 1];
+                    statesStack.pop_back();
+                }
+
+                common::Token reducToken;
+                reducToken.kind = curSym;
+
+                newNode = new Tree();
+                newNode->token = reducToken;
+
+                newNode->down = curNode->next;
+
+                if (curNode->next != NULL) curNode->disconnect(curNode->next);
+                curNode->connect(newNode);
+                curNode = curNode->next;
+
+                i--;
+                test = true;
+
+                break;
+        }
+    }
+    return root;
+}
+
+void ParseTree::print_parse_tree(Tree *root)
+{
+    if (root != NULL) {
+        if (root->prev == NULL) {
+            for (Tree *it = root; it != NULL; it = it->next) {
+                std::cout << it->token.getKind() << " ";
+            }
+            std::cout << std::endl;
+        }
+        if (root->down != NULL)
+            if (root->down->prev == NULL) {
+                std::cout << root->token.getKind() << " ";
+            }
+            print_parse_tree(root->down);
+        if (root->next != NULL)
+            if (root->next->prev == NULL) {
+                std::cout << root->token.getKind() << " ";
+            }
+            print_parse_tree(root->next);
+    }
+}
+
+void ParseTree::tokensLinearize(std::vector<common::Token> &src,
+                                common::Tokens const& tokens)
+{
+    common::Token bof = { common::bof, "bof" };
+    src.push_back(bof);
+
+    for (unsigned i = 0; i < tokens.size(); ++i)
+        for (unsigned j = 0; j < tokens[i].size(); ++j)
+            if (tokens[i][j].kind != common::COMMENT)
+                src.push_back(tokens[i][j]);
+
+    common::Token eof = { common::eof, "eof" };
+    src.push_back(eof);
+}
+
+///
+
 unsigned getReductionSize(ProductionRule const& rule)
 {
     unsigned size = 0;
@@ -173,159 +359,6 @@ common::Kind getReductionKind(ProductionRule const& rule)
             break;
     }
     return kind;
-}
-
-Tree::Tree() : prev(NULL), next(NULL), down(NULL) {}
-
-Tree::~Tree()
-{
-    //delete prev;
-    delete next;
-    delete down;
-}
-
-void Tree::connect(Tree *rhs)
-{
-    this->next = rhs;
-    rhs->prev = this;
-}
-
-void Tree::disconnect(Tree *rhs)
-{
-    this->next = NULL;
-    rhs->prev = NULL;
-}
-
-TreePtr::TreePtr(Tree *tree) : tree_(tree) {}
-
-TreePtr::~TreePtr()
-{
-    delete tree_;
-}
-
-Tree* TreePtr::operator*()
-{
-    return tree_;
-}
-
-// Turn Tokens into one single line of tokenized input,
-//  and also prepends BOF and EOF to the source code.
-// All Common::COMMENT tokens are removed during this process.
-// Need some rework in the future to improve efficiency.
-void tokensLinearize(std::vector<common::Token> &src,
-                     common::Tokens const& tokens);
-
-// Parsing method similar to the one I used in CS241 assignment 8.
-// Need to be revised in the future!!
-Tree* build_parse_tree(common::Tokens const& tokens)
-{
-    std::vector<common::Token> src;
-    tokensLinearize(src, tokens);
-
-    Tree *root = new Tree();
-
-    std::vector<unsigned> statesStack;
-    common::Kind curSym;
-    unsigned curState = 0;
-
-    root->token.kind = common::Start;
-
-    Tree *curNode = root;
-
-    bool test = false;
-    for (unsigned i = 0; i < src.size(); ++i) {
-        common::Token curToken = src[i];
-        if (!test) curSym = curToken.kind;
-        LR1ParseRule lr1Rule = getLR1Rule(curState, curSym);
-
-        if (test == true) {
-            i--;
-            test = false;
-        }
-
-        Tree *newNode;
-        switch (lr1Rule.type) {
-            case SHIFT:
-                if (curSym == curToken.kind) {
-                    newNode = new Tree();
-                    newNode->token = curToken;
-                    curNode->connect(newNode);
-                    curNode = curNode->next;
-                }
-
-                statesStack.push_back(curState);
-
-                curState = lr1Rule.next;
-
-
-                break;
-            case REDUCE:
-                curSym = getReductionKind((ProductionRule)lr1Rule.next);
-
-                unsigned size = getReductionSize((ProductionRule)lr1Rule.next);
-                for (; size > 0; --size) {
-                    curNode = curNode->prev;
-
-                    curState = statesStack[statesStack.size() - 1];
-                    statesStack.pop_back();
-                }
-
-                common::Token reducToken;
-                reducToken.kind = curSym;
-
-                newNode = new Tree();
-                newNode->token = reducToken;
-
-                newNode->down = curNode->next;
-
-                if (curNode->next != NULL) curNode->disconnect(curNode->next);
-                curNode->connect(newNode);
-                curNode = curNode->next;
-
-                i--;
-                test = true;
-
-                break;
-        }
-    }
-    return root;
-}
-
-void tokensLinearize(std::vector<common::Token> &src,
-                     common::Tokens const& tokens)
-{
-    common::Token bof = { common::bof, "bof" };
-    src.push_back(bof);
-
-    for (unsigned i = 0; i < tokens.size(); ++i)
-        for (unsigned j = 0; j < tokens[i].size(); ++j)
-            if (tokens[i][j].kind != common::COMMENT)
-                src.push_back(tokens[i][j]);
-
-    common::Token eof = { common::eof, "eof" };
-    src.push_back(eof);
-}
-
-void print_parse_tree(Tree *root)
-{
-    if (root != NULL) {
-        if (root->prev == NULL) {
-            for (Tree *it = root; it != NULL; it = it->next) {
-                std::cout << it->token.getKind() << " ";
-            }
-            std::cout << std::endl;
-        }
-        if (root->down != NULL)
-            if (root->down->prev == NULL) {
-                std::cout << root->token.getKind() << " ";
-            }
-            print_parse_tree(root->down);
-        if (root->next != NULL)
-            if (root->next->prev == NULL) {
-                std::cout << root->token.getKind() << " ";
-            }
-            print_parse_tree(root->next);
-    }
 }
 
 }

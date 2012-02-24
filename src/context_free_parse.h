@@ -3,7 +3,7 @@
  * The tokenized source code is examined for the validity of
  *  its context-free grammar.
  *
- * More implementation details are placed in .cc file,
+ * More implementation details are placed in source file,
  *  but end users should have no need for those.
  ******************************************************************************/
 #ifndef CONTEXT_FREE_PARSE_H
@@ -16,15 +16,6 @@ namespace context_free_parse {
 
 using namespace parse_common;   // Use parse_common here,
                                 //  because it is like a parent namespace
-
-// Get the number of states/symbols that need to be stepped back for reduction
-unsigned getReductionSize(ProductionRule const& rule);
-
-// Get common::Kind after reducing the production rule
-common::Kind getReductionKind(ProductionRule const& rule);
-
-// Convert non-terminal symbols in common::Kind into string.
-std::string translateNonTerminal(common::Kind const& kind);
 
 // LR1ParseRuleType determines which action the rule follows
 // Reduce: Terminal or lower level non-terminal symbols are
@@ -39,41 +30,40 @@ enum LR1ParseRuleType {
 struct LR1ParseRule {
     LR1ParseRuleType type;
     unsigned state;
-    common::Kind sym;   // Sym applies to non-terminal symbol when type = SHIFT
-                        //  when type = REDUCE, only terminal symbol!
-    unsigned next;      // Next applies to next state when type = SHIFT
-                        //  when type = REDUCE, production rule!
+    common::Kind sym;   // Sym applies to non-terminal symbol when type == SHIFT
+                        //  when type == REDUCE, only terminal symbol!
+    unsigned next;      // Next applies to next state when type == SHIFT
+                        //  when type == REDUCE, production rule!
 };
 
-class Tree {
+class Tree;     // Base unit for the ParseTree.
+                // Implementation details are placed in source file.
+
+class ParseTree {
     public:
-        common::Token token;
-        Tree *prev;
-        Tree *next;
-        Tree *down;
-
-        Tree();
-        ~Tree();
-
-        void connect(Tree *rhs);    // this->next <---> rhs->prev
-        void disconnect(Tree *rhs); // this->next <-/-> rhs->prev
-};
-
-class TreePtr {
-    public:
-        explicit TreePtr(Tree *tree);
-        ~TreePtr();
+        explicit ParseTree(Tree *tree);
+        explicit ParseTree(common::Tokens const& tokens);
+        ~ParseTree();
 
         Tree* operator*();
+        void print();
     private:
         Tree *tree_;
+
+        // Build a tree structure for the source code.
+        static Tree* build_parse_tree(common::Tokens const& tokens);
+        // Print out the tree structure in CFG form.
+        static void print_parse_tree(Tree *root);
+        // Turn Tokens into one single line of tokenized input,
+        //  and also prepends BOF and EOF to the source code.
+        // All Common::COMMENT tokens are removed during this process.
+        // Need some rework in the future to improve efficiency.
+        static void tokensLinearize(std::vector<common::Token> &src,
+                             common::Tokens const& tokens);
 };
 
-// Build a tree structure for the source code.
-Tree* build_parse_tree(common::Tokens const& tokens);
 
-// Print out the tree structure in CFG form.
-void print_parse_tree(Tree *root);
+
 
 }
 
