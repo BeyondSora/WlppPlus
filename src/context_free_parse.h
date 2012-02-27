@@ -36,9 +36,6 @@ struct LR1ParseRule {
                         //  when type == REDUCE, production rule!
 };
 
-//class Tree;     // Base unit for the ParseTree.
-                // Implementation details are placed in source file.
-
 class ParseTree {
     public:
         explicit ParseTree(common::Tokens const& tokens);
