@@ -162,35 +162,29 @@ std::string translateProductionRule(const ProductionRule &rule)
     return translation;
 }
 
-/*
-Tree::Tree() {}
+//
+// Tree class
+
+Tree::Tree() : prev(NULL), next(NULL), down(NULL) {}
 
 Tree::~Tree()
 {
-    for (unsigned i = 0; i < this->subTrees.size(); ++i)
-        delete this->subTrees[i];
+    delete next;
+    delete down;
 }
 
-inline Tree* Tree::getSubTree(const unsigned &i)
+void Tree::connect(Tree *rhs)
 {
-    return this->subTrees.at(i);
+    this->next = rhs;
+    rhs->prev = this;
 }
 
-inline std::string Tree::getID()
+void Tree::disconnect(Tree *rhs)
 {
-    std::string id;
-    switch (this->rule) {
-        default: assert("Not a terminal symbol\n"); break;
-
-        case Ftor_Exp_Id:       // fall-through
-        case Ftor_Exp_Int:      // fall-through
-        case Ftor_Exp_Char:     // fall-through
-        case Lval_Exp_Id:
-                 id = this->units[1];
-                 break;
-    }
-    return id;
+    this->next = NULL;
+    rhs->prev = NULL;
 }
-*/
+
+///
 
 }

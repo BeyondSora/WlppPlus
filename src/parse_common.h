@@ -1,6 +1,6 @@
 /******************************************************************************
  * This namespace contains what is shared across
- *  context-free and context-sensitive parsing.
+ *  context-free and context-sensitive(semantic) parsing.
  *
  * More implementation details are placed in .cc file,
  *  but end users should have no need for those.
@@ -12,6 +12,10 @@
 #include <vector>
 
 #include "common.h"
+
+// This namespace is forward declaration.
+// ParseTree is friend class of Tree.
+namespace context_free_parse { class ParseTree; }
 
 namespace parse_common {
 
@@ -96,6 +100,20 @@ enum ProductionRule {
 
 // Convert ProductionRule to string
 std::string translateProductionRule(const ProductionRule &rule);
+
+class Tree {
+    friend class context_free_parse::ParseTree;
+    public:
+        Tree();
+        ~Tree();
+    private:
+        common::Token token;
+        Tree *prev;
+        Tree *next;
+        Tree *down;
+        void connect(Tree *rhs);    // this->next <---> rhs->prev
+        void disconnect(Tree *rhs); // this->next <-/-> rhs->prev
+};
 
 }
 

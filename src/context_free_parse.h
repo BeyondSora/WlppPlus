@@ -36,30 +36,24 @@ struct LR1ParseRule {
                         //  when type == REDUCE, production rule!
 };
 
-class Tree;     // Base unit for the ParseTree.
+//class Tree;     // Base unit for the ParseTree.
                 // Implementation details are placed in source file.
 
 class ParseTree {
     public:
-        explicit ParseTree(Tree *tree);
         explicit ParseTree(common::Tokens const& tokens);
         ~ParseTree();
 
-        Tree* operator*();
-        void print();
+        Tree* operator*();  // Returns tree_.
+        std::string toString();
+        Tree* move();   // Returns tree_ and then nullify it.
     private:
         Tree *tree_;
 
         // Build a tree structure for the source code.
         static Tree* build_parse_tree(common::Tokens const& tokens);
-        // Print out the tree structure in CFG form.
-        static void print_parse_tree(Tree *root);
-        // Turn Tokens into one single line of tokenized input,
-        //  and also prepends BOF and EOF to the source code.
-        // All Common::COMMENT tokens are removed during this process.
-        // Need some rework in the future to improve efficiency.
-        static void tokensLinearize(std::vector<common::Token> &src,
-                             common::Tokens const& tokens);
+        // Convert a tree structure into string in CFG format.
+        static void convTreeToString(Tree *root, std::string &str);
 };
 
 
