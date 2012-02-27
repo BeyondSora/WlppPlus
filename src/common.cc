@@ -26,9 +26,9 @@ std::string Token::getKind()
         case WHILE:         kindString = "WHILE";       break;
         case RETURN:        kindString = "RETURN";      break;
         case INTK:          kindString = "INTK";        break;
+        case INT:           kindString = "INT";         break;
         case CHARK:         kindString = "CHARK";       break;
         case CHAR:          kindString = "CHAR";        break;
-        case INT:           kindString = "INT";         break;
         case LPAREN:        kindString = "LPAREN";      break;
         case RPAREN:        kindString = "RPAREN";      break;
         case LBRACE:        kindString = "LBRACE";      break;
