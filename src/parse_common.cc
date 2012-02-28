@@ -208,6 +208,9 @@ Tree* ParseTreeInterface::move()
 
 std::string ParseTreeInterface::toString()
 {
+    if (tree_ == NULL) {
+        throw "ParseTreeInterface::toString() - tree_ is NULL!\n";
+    }
     std::string str;
     convTreeToString(tree_, str);
     return str;
