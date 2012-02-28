@@ -11,11 +11,10 @@ using namespace lr1_rules;  // LR1_RULES is only in another file
 
 // Turn Tokens into one single line of tokenized input,
 //  and also prepends BOF and EOF to the source code.
-// All Common::COMMENT tokens are removed during this process.
+// All common::COMMENT tokens are removed during this process.
 // Need some rework in the future to improve efficiency.
 void tokensLinearize(std::vector<common::Token> &src,
                      common::Tokens const& tokens);
-
 
 // Get the number of states/symbols that need to be stepped back for reduction.
 unsigned getReductionSize(ProductionRule const& rule);
@@ -29,30 +28,6 @@ common::Kind getReductionKind(ProductionRule const& rule);
 ParseTree::ParseTree(common::Tokens const& tokens)
 {
     tree_ = build_parse_tree(tokens);
-}
-
-ParseTree::~ParseTree()
-{
-    delete tree_;
-}
-
-Tree* ParseTree::operator*()
-{
-    return tree_;
-}
-
-std::string ParseTree::toString()
-{
-    std::string str;
-    convTreeToString(tree_, str);
-    return str;
-}
-
-Tree* ParseTree::move()
-{
-    Tree *ret = tree_;
-    tree_ = NULL;
-    return ret;
 }
 
 // Parsing method similar to the one I used in CS241 assignment 8.
@@ -133,28 +108,6 @@ Tree* ParseTree::build_parse_tree(common::Tokens const& tokens)
     }
 
     return root;
-}
-
-void ParseTree::convTreeToString(Tree *root, std::string &str)
-{
-    if (root != NULL) {
-        if (root->prev == NULL) {
-            for (Tree *it = root; it != NULL; it = it->next) {
-                str += it->token.getKind() + " ";
-            }
-            str += "\n";
-        }
-        if (root->down != NULL)
-            if (root->down->prev == NULL) {
-                str += root->token.getKind() + " ";
-            }
-            convTreeToString(root->down, str);
-        if (root->next != NULL)
-            if (root->next->prev == NULL) {
-                str += root->token.getKind() + " ";
-            }
-            convTreeToString(root->next, str);
-    }
 }
 
 ///

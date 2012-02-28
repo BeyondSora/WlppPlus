@@ -14,7 +14,13 @@
 namespace semantic_parse {
 
 using namespace parse_common;   // Use parse_common here,
-                                //  because it is like a parent namespace
+                                //  because it is like a parent namespace.
+
+class ParseTree: public ParseTreeInterface {
+    public:
+        explicit ParseTree(Tree* tree);
+};
+
 }
 
 #endif//SEMANTIC_PARSE_H

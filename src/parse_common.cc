@@ -187,4 +187,54 @@ void Tree::disconnect(Tree *rhs)
 
 ///
 
+// ParseTreeInterface class
+
+ParseTreeInterface::~ParseTreeInterface()
+{
+    delete tree_;
+}
+
+Tree* ParseTreeInterface::operator*()
+{
+    return tree_;
+}
+
+Tree* ParseTreeInterface::move()
+{
+    Tree *ret = tree_;
+    tree_ = NULL;
+    return ret;
+}
+
+std::string ParseTreeInterface::toString()
+{
+    std::string str;
+    convTreeToString(tree_, str);
+    return str;
+}
+
+void ParseTreeInterface::convTreeToString(Tree *root, std::string &str)
+{
+    if (root != NULL) {
+        if (root->prev == NULL) {
+            for (Tree *it = root; it != NULL; it = it->next) {
+                str += it->token.getKind() + " ";
+            }
+            str += "\n";
+        }
+        if (root->down != NULL)
+            if (root->down->prev == NULL) {
+                str += root->token.getKind() + " ";
+            }
+            convTreeToString(root->down, str);
+        if (root->next != NULL)
+            if (root->next->prev == NULL) {
+                str += root->token.getKind() + " ";
+            }
+            convTreeToString(root->next, str);
+    }
+}
+
+///
+
 }

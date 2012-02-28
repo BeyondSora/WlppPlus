@@ -36,14 +36,14 @@ enum ProductionRule {
     Procs_Exp_Procs_Proc,   // procedures -> procedures procedure
     Procs_Exp_Nothing,      // procedures -> Nothing
 
-    ProcW_Exp,              // procedureWain -> INTK WAIN LPAREN dcl COMMA dcl RPAREN
-                            //                  LBRACE
-                            //                  dcls statements RETURN expr SEMI
-                            //                  RBRACE
-    Proc_Exp,               // procedure -> type ID LPAREN dcl COMMA dcl RPAREN
-                            //              LBRACE
-                            //              dcls statements RETURN expr SEMI
-                            //              RBRACE
+    ProcW_Exp,      // procedureWain -> INTK WAIN LPAREN dcl COMMA dcl RPAREN
+                    //                  LBRACE
+                    //                  dcls statements RETURN expr SEMI
+                    //                  RBRACE
+    Proc_Exp,       // procedure -> type ID LPAREN dcl COMMA dcl RPAREN
+                    //              LBRACE
+                    //              dcls statements RETURN expr SEMI
+                    //              RBRACE
 
     Type_Exp_Intk,          // type -> INTK
     Type_Exp_IntkStar,      // type -> INTK STAR
@@ -101,7 +101,10 @@ enum ProductionRule {
 // Convert ProductionRule to string
 std::string translateProductionRule(const ProductionRule &rule);
 
+// Base unit for ParseTree.
+// There should not be a need to create an instance of this class.
 class Tree {
+    friend class ParseTreeInterface;
     friend class context_free_parse::ParseTree;
     public:
         Tree();
@@ -113,6 +116,23 @@ class Tree {
         Tree *down;
         void connect(Tree *rhs);    // this->next <---> rhs->prev
         void disconnect(Tree *rhs); // this->next <-/-> rhs->prev
+};
+
+// The foundation for context_free_parse::ParseTree
+//  and semantic_parse::ParseTree down the road.
+// Never instantiate an instance of this class by itself!
+class ParseTreeInterface {
+    public:
+        virtual ~ParseTreeInterface();
+
+        Tree* operator*();  // Returns tree_ of Type Tree*.
+        Tree* move();       // Returns tree_ and then nullify it.
+        std::string toString();
+    protected:
+        Tree *tree_;
+
+        // Convert a tree structure into string in CFG format.
+        static void convTreeToString(Tree *root, std::string &str);
 };
 
 }

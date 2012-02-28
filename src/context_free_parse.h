@@ -15,7 +15,7 @@
 namespace context_free_parse {
 
 using namespace parse_common;   // Use parse_common here,
-                                //  because it is like a parent namespace
+                                //  because it is like a parent namespace.
 
 // LR1ParseRuleType determines which action the rule follows
 // Reduce: Terminal or lower level non-terminal symbols are
@@ -36,25 +36,13 @@ struct LR1ParseRule {
                         //  when type == REDUCE, production rule!
 };
 
-class ParseTree {
+class ParseTree: public ParseTreeInterface {
     public:
         explicit ParseTree(common::Tokens const& tokens);
-        ~ParseTree();
-
-        Tree* operator*();  // Returns tree_.
-        std::string toString();
-        Tree* move();   // Returns tree_ and then nullify it.
     private:
-        Tree *tree_;
-
         // Build a tree structure for the source code.
         static Tree* build_parse_tree(common::Tokens const& tokens);
-        // Convert a tree structure into string in CFG format.
-        static void convTreeToString(Tree *root, std::string &str);
 };
-
-
-
 
 }
 
