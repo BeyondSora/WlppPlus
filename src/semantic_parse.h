@@ -16,9 +16,17 @@ namespace semantic_parse {
 using namespace parse_common;   // Use parse_common here,
                                 //  because it is like a parent namespace.
 
+struct VectorTree {
+    ProductionRule rule;
+    common::Token token;
+    std::vector<VectorTree> leaves;
+};
+
 class ParseTree: public ParseTreeInterface {
     public:
         explicit ParseTree(Tree* tree);
+    private:
+        VectorTree vecTree_;
 };
 
 }
