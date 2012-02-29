@@ -1,15 +1,28 @@
-CXX=g++
-CXXFLAGS=-Wall
+CXX = g++
+CXXFLAGS = -Wall
 
-SRCDIR=src
-BUILDDIR=build
+SRCDIR = src
+BUILDDIR = build
 
+BUILD = compiler
 
-build:
-	$(CXX) $(CXXFLAGS) $(SRCDIR)/* -o $(BUILDDIR)/compiler
+OBJS_ = common.o \
+		run_main.o \
+		file.o \
+		scan.o \
+		parse_common.o \
+		context_free_parse.o \
+		semantic_parse.o \
+		main.o
 
-clean:
-	rm *.o
+OBJS = $(patsubst %, $(BUILDDIR)/%, $(OBJS_))
 
-clean-build:
-	rm $(BUILDDIR)/*
+$(BUILDDIR)/%.o : $(SRCDIR)/%.cc
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(BUILDDIR)/$(BUILD) : $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+.PHONY : clean
+clean :
+	rm $(BUILDDIR)/*.o

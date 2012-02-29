@@ -16,6 +16,7 @@
 // This namespace is forward declaration.
 // ParseTree is friend class of Tree.
 namespace context_free_parse { class ParseTree; }
+namespace semantic_parse { class ParseTree; }
 
 namespace parse_common {
 
@@ -98,14 +99,13 @@ enum ProductionRule {
     Lval_Exp_Lval,          // lvalue -> LPAREN lvalue RPAREN
 };
 
-// Convert ProductionRule to string
-std::string translateProductionRule(const ProductionRule &rule);
 
 // Base unit for ParseTree.
 // There should not be a need to create an instance of this class.
 class Tree {
     friend class ParseTreeInterface;
     friend class context_free_parse::ParseTree;
+    friend class semantic_parse::ParseTree;
     public:
         Tree();
         ~Tree();
@@ -123,6 +123,8 @@ class Tree {
 // Never instantiate an instance of this class by itself!
 class ParseTreeInterface {
     public:
+        ParseTreeInterface();
+        ParseTreeInterface(Tree *tree);
         virtual ~ParseTreeInterface();
 
         Tree* operator*();  // Returns tree_ of Type Tree*.

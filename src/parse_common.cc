@@ -2,6 +2,8 @@
 
 namespace parse_common {
 
+std::string translateProductionRule(const ProductionRule &rule);
+
 std::string translateProductionRule(const ProductionRule &rule)
 {
     std::string translation;
@@ -187,7 +189,16 @@ void Tree::disconnect(Tree *rhs)
 
 ///
 
+//
 // ParseTreeInterface class
+
+ParseTreeInterface::ParseTreeInterface()
+{
+}
+
+ParseTreeInterface::ParseTreeInterface(Tree *tree) : tree_(tree)
+{
+}
 
 ParseTreeInterface::~ParseTreeInterface()
 {
