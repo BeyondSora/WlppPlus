@@ -1,7 +1,5 @@
 #include "semantic_parse.h"
 
-#include <iostream>
-
 namespace semantic_parse {
 
 //
