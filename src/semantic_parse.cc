@@ -26,6 +26,10 @@ void ParseTree::treeToVectorTree(Tree *tree, VectorTree &ret)
     }
 }
 
+void ParseTree::typeCheck(VectorTree const& ret)
+{
+}
+
 ///
 
 }

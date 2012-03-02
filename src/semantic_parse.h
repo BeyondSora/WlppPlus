@@ -30,6 +30,8 @@ class ParseTree: public ParseTreeInterface {
 
         // Converts a Tree* structure into a VectorTree structure.
         static void treeToVectorTree(Tree* tree, VectorTree &ret);
+        // Typecheck the parse tree to make sure it is semantically correct.
+        static void typeCheck(VectorTree const& ret);
 };
 
 }
