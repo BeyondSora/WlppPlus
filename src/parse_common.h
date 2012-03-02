@@ -97,8 +97,9 @@ enum ProductionRule {
     Lval_Exp_Id,            // lvalue -> ID
     Lval_Exp_Ptr,           // lvalue -> STAR factor
     Lval_Exp_Lval,          // lvalue -> LPAREN lvalue RPAREN
-};
 
+    NUL_RULE,               // NOT A PRODUCTION RULE
+};
 
 // Base unit for ParseTree.
 // There should not be a need to create an instance of this class.
@@ -110,6 +111,7 @@ class Tree {
         Tree();
         ~Tree();
     private:
+        ProductionRule rule;
         common::Token token;
         Tree *prev;
         Tree *next;
@@ -123,16 +125,15 @@ class Tree {
 // Never instantiate an instance of this class by itself!
 class ParseTreeInterface {
     public:
-        ParseTreeInterface();
-        ParseTreeInterface(Tree *tree);
-        virtual ~ParseTreeInterface();
-
         Tree* operator*();  // Returns tree_ of Type Tree*.
         Tree* move();       // Returns tree_ and then nullify it.
         std::string toString();
     protected:
         Tree *tree_;
 
+        ParseTreeInterface();
+        ParseTreeInterface(Tree *tree);
+        virtual ~ParseTreeInterface();
         // Convert a tree structure into string in CFG format.
         static void convTreeToString(Tree *root, std::string &str);
 };

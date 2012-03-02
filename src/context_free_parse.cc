@@ -78,16 +78,18 @@ Tree* ParseTree::build_parse_tree(common::Tokens const& tokens)
 
                 break;
             case REDUCE:
-                unsigned size = getReductionSize((ProductionRule)lr1Rule.next);
+                ProductionRule rule = (ProductionRule)lr1Rule.next;
+                unsigned size = getReductionSize(rule);
                 for(; size > 0; --size) {
                     curNode = curNode->prev;
                     curState = statesStack[statesStack.size() - 1];
                     statesStack.pop_back();
                 }
 
-                curSym = getReductionKind((ProductionRule)lr1Rule.next);
+                curSym = getReductionKind(rule);
 
                 newNode = new Tree();
+                newNode->rule = rule;
                 newNode->token.kind = curSym;
 
                 newNode->down = curNode->next;

@@ -27,6 +27,9 @@ class ParseTree: public ParseTreeInterface {
         explicit ParseTree(Tree* tree);
     private:
         VectorTree vecTree_;
+
+        // Converts a Tree* structure into a VectorTree structure.
+        static void treeToVectorTree(Tree* tree, VectorTree &ret);
 };
 
 }

@@ -7,6 +7,7 @@
 #include "context_free_parse.h"
 #include "file.h"
 #include "scan.h"
+#include "semantic_parse.h"
 
 run_main::run_main() {}
 
@@ -43,4 +44,5 @@ void run_main::run()
     std::cout << "----PARSE TREE: \n";
     context_free_parse::ParseTree parseTree(tokens);
     std::cout << parseTree.toString();
+    semantic_parse::ParseTree semTree(parseTree.move());
 }

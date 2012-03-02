@@ -10,6 +10,8 @@ std::string translateProductionRule(const ProductionRule &rule)
     switch (rule) {
         default: throw "Rule not found!\n"; break;
 
+        case NUL_RULE: translation = ""; break;     // NOT A PRODUCTION RULE
+
         case Start_Exp_Proc:
             translation = "Start bof proceduresAll eof";
             break;
@@ -167,7 +169,7 @@ std::string translateProductionRule(const ProductionRule &rule)
 //
 // Tree class
 
-Tree::Tree() : prev(NULL), next(NULL), down(NULL) {}
+Tree::Tree() : rule(NUL_RULE), prev(NULL), next(NULL), down(NULL) {}
 
 Tree::~Tree()
 {
@@ -192,13 +194,9 @@ void Tree::disconnect(Tree *rhs)
 //
 // ParseTreeInterface class
 
-ParseTreeInterface::ParseTreeInterface()
-{
-}
+ParseTreeInterface::ParseTreeInterface() {}
 
-ParseTreeInterface::ParseTreeInterface(Tree *tree) : tree_(tree)
-{
-}
+ParseTreeInterface::ParseTreeInterface(Tree *tree) : tree_(tree) {}
 
 ParseTreeInterface::~ParseTreeInterface()
 {
@@ -230,22 +228,14 @@ std::string ParseTreeInterface::toString()
 void ParseTreeInterface::convTreeToString(Tree *root, std::string &str)
 {
     if (root != NULL) {
-        if (root->prev == NULL) {
-            for (Tree *it = root; it != NULL; it = it->next) {
-                str += it->token.getKind() + " ";
-            }
-            str += "\n";
-        }
-        if (root->down != NULL)
-            if (root->down->prev == NULL) {
-                str += root->token.getKind() + " ";
-            }
-            convTreeToString(root->down, str);
-        if (root->next != NULL)
-            if (root->next->prev == NULL) {
-                str += root->token.getKind() + " ";
-            }
-            convTreeToString(root->next, str);
+        std::string ruleStr = translateProductionRule(root->rule);
+        str += (ruleStr == "" ? "" : ruleStr + "\n");
+    }
+    if (root->down != NULL) {
+        convTreeToString(root->down, str);
+    }
+    if (root->next != NULL) {
+        convTreeToString(root->next, str);
     }
 }
 
