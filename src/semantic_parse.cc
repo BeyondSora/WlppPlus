@@ -1,6 +1,29 @@
+/******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ ******************************************************************************/
+
 #include "semantic_parse.h"
 
+#include "error.h"
+
 namespace semantic_parse {
+
+//
+// ErrorObject class
+
+class ErrorObject: public error::ErrorObjectInterface {
+    public:
+        ErrorObject(error::ErrorCode errCode,
+                    std::string errLocation,
+                    std::string errMsg);
+};
+
+ErrorObject::ErrorObject(error::ErrorCode errCode,
+                         std::string errLocation,
+                         std::string errMsg)
+    : ErrorObjectInterface(errCode, errLocation, errMsg) {}
+
+///
 
 //
 // ParseTree class
@@ -28,6 +51,8 @@ void ParseTree::treeToVectorTree(Tree *tree, VectorTree &ret)
 
 void ParseTree::typeCheck(VectorTree const& ret)
 {
+    //switch (ret.rule) {
+    //}
 }
 
 ///

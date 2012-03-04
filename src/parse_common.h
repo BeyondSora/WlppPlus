@@ -1,4 +1,6 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * This namespace contains what is shared across
  *  context-free and context-sensitive(semantic) parsing.
  *
@@ -125,6 +127,7 @@ class Tree {
 // Never instantiate an instance of this class by itself!
 class ParseTreeInterface {
     public:
+        virtual ~ParseTreeInterface();
         Tree* operator*();  // Returns tree_ of Type Tree*.
         Tree* move();       // Returns tree_ and then nullify it.
         std::string toString();
@@ -133,7 +136,6 @@ class ParseTreeInterface {
 
         ParseTreeInterface();
         ParseTreeInterface(Tree *tree);
-        virtual ~ParseTreeInterface();
         // Convert a tree structure into string in CFG format.
         static void convTreeToString(Tree *root, std::string &str);
 };

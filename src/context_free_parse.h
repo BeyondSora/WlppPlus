@@ -1,4 +1,6 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * This namespace performs context-free grammar analysis.
  * The tokenized source code is examined for the validity of
  *  its context-free grammar.

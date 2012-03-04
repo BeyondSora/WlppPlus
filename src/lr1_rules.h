@@ -1,4 +1,6 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * This namespace only contains all the LR1 Parse Rules
  *
  * This file is intended to be included in context_free_parse.cc

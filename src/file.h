@@ -1,4 +1,6 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * This namespace is for opening/closing and modifying files.
  *
  * More implementation details are placed in .cc file,

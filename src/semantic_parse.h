@@ -1,4 +1,6 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * This namespace performs semantic analysis.
  * Various forms of type-check's are performed.
  *

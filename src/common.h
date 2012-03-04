@@ -1,4 +1,6 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * Everything shared across classes, namespaces and such is
  *  included in this common namespace.
  *

@@ -7,6 +7,7 @@ BUILDDIR = build
 BUILD = compiler
 
 OBJS_ = common.o \
+		error.o \
 		run_main.o \
 		file.o \
 		scan.o \
