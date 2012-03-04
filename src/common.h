@@ -102,7 +102,7 @@ struct Token {
 typedef std::vector<Token> TokenLine;
 typedef std::vector<TokenLine> Tokens;
 
-std::string toString(int num);
+std::string toString(unsigned num);
 
 }
 

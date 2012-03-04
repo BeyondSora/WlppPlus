@@ -34,6 +34,16 @@ int ErrorObjectInterface::retCode() const
 ///
 
 //
+// ErrorObject class
+
+ErrorObject::ErrorObject(ErrorCode errCode,
+                         std::string errLocation,
+                         std::string errMsg)
+    : ErrorObjectInterface(errCode, errLocation, errMsg) {}
+
+///
+
+//
 // ErrorObjectPtr class
 
 ErrorObjectPtr::ErrorObjectPtr(ErrorObjectInterface *err): err_(err) {}

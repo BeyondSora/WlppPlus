@@ -11,6 +11,8 @@
 
 #include "context_free_parse.h"
 
+#include "error.h"
+
 namespace lr1_rules {
 
 const unsigned LR1_RULES_SIZE = 703;    // Number of LR1 parse rules
@@ -734,7 +736,11 @@ context_free_parse::LR1ParseRule getLR1Rule(unsigned state, common::Kind sym)
             break;
         }
     }
-    if (i == LR1_RULES_SIZE) throw("lr1_rules::getLR1Rule - No rule found!\n");
+    if (i == LR1_RULES_SIZE) {
+        throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+            "lr1_rules::getLR1Rule(unsigned, common::Kind)",
+            "No rule found!");
+    }
     return lr1Rule;
 }
 

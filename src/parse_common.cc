@@ -4,6 +4,8 @@
 
 #include "parse_common.h"
 
+#include "error.h"
+
 namespace parse_common {
 
 std::string translateProductionRule(const ProductionRule &rule);
@@ -12,7 +14,11 @@ std::string translateProductionRule(const ProductionRule &rule)
 {
     std::string translation;
     switch (rule) {
-        default: throw "Rule not found!\n"; break;
+        default:
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "parse_common::translateProductionRule"
+                    "(const ProductionRule &",
+                    "No matching rule found during translation.");
 
         case NUL_RULE: translation = ""; break;     // NOT A PRODUCTION RULE
 
@@ -222,7 +228,9 @@ Tree* ParseTreeInterface::move()
 std::string ParseTreeInterface::toString()
 {
     if (tree_ == NULL) {
-        throw "ParseTreeInterface::toString() - tree_ is NULL!\n";
+        throw new error::ErrorObject(error::TREE_IS_NULL,
+                "parse_common::ParseTreeInterface::toString()",
+                "The parse tree is empty.");
     }
     std::string str;
     convTreeToString(tree_, str);

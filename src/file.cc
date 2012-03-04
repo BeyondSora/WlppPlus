@@ -12,23 +12,6 @@
 
 namespace file {
 
-//
-// ErrorObject class
-
-class ErrorObject: public error::ErrorObjectInterface {
-    public:
-        ErrorObject(error::ErrorCode errCode,
-                    std::string errLocation,
-                    std::string errMsg);
-};
-
-ErrorObject::ErrorObject(error::ErrorCode errCode,
-                         std::string errLocation,
-                         std::string errMsg)
-    : ErrorObjectInterface(errCode, errLocation, errMsg) {}
-
-///
-
 void toLines(std::ifstream& ifs, common::Lines& lines);
 
 common::Lines toLines(std::string const& filename)
@@ -37,7 +20,7 @@ common::Lines toLines(std::string const& filename)
 
     std::ifstream ifs(filename.c_str());
     if (ifs.fail()) {
-        throw new ErrorObject(error::FILE_CANNOT_OPEN,
+        throw new error::ErrorObject(error::FILE_CANNOT_OPEN,
                 "file::toLines(std::string const&)",
                 "could not open file: \"" + filename + "\".");
     }
@@ -46,7 +29,7 @@ common::Lines toLines(std::string const& filename)
 
     ifs.close();
     if (ifs.fail()) {
-        throw new ErrorObject(error::FILE_CANNOT_CLOSE,
+        throw new error::ErrorObject(error::FILE_CANNOT_CLOSE,
                 "file::toLines(std::string const&)",
                 "could not open file: \"" + filename + "\".");
     }

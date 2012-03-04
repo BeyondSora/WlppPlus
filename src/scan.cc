@@ -4,6 +4,8 @@
 
 #include "scan.h"
 
+#include "error.h"
+
 #define WHITESPACES     "\t\n\r "
 #define LETTERS         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 #define ONE_TO_NINE     "123456789"
@@ -219,7 +221,9 @@ common::TokenLine lineTokenize(std::string const& line)
                 // No more transitions possible
                 if (stateKinds[state] == common::NUL) {
                     // NEED to be RE-implemented
-                    throw "ERROR\n";
+                    throw new error::ErrorObject(error::LEX_ERROR,
+                            "scan::lineTokenize(std::string const&)",
+                            "Error lexing at " + common::toString(i));
                 }
 
                 if (stateKinds[state] != common::WHITESPACE) {

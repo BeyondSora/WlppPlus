@@ -6,6 +6,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <sstream>
 
 namespace common {
 
@@ -128,10 +129,11 @@ int Token::toInt()
 }
 //
 
-std::string toString(int num)
+std::string toString(unsigned num)
 {
-    // not implemented yet
-    assert(false);
+    std::stringstream ss;
+    ss << num;
+    return ss.str();
 }
 
 }

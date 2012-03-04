@@ -9,23 +9,6 @@
 namespace semantic_parse {
 
 //
-// ErrorObject class
-
-class ErrorObject: public error::ErrorObjectInterface {
-    public:
-        ErrorObject(error::ErrorCode errCode,
-                    std::string errLocation,
-                    std::string errMsg);
-};
-
-ErrorObject::ErrorObject(error::ErrorCode errCode,
-                         std::string errLocation,
-                         std::string errMsg)
-    : ErrorObjectInterface(errCode, errLocation, errMsg) {}
-
-///
-
-//
 // ParseTree class
 
 ParseTree::ParseTree(Tree *tree) : ParseTreeInterface(tree)

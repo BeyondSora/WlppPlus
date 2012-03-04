@@ -8,13 +8,15 @@
 
 #include "lr1_rules.h"
 
+#include "error.h"
+
 namespace context_free_parse {
 
 using namespace lr1_rules;  // LR1_RULES is only in another file
                             //  because of its large number of code.
 
 // Turn Tokens into one single line of tokenized input,
-//  and also prepends BOF and EOF to the source code.
+//  and also prepends BOF and appends EOF to the source code.
 // All common::COMMENT tokens are removed during this process.
 // Need some rework in the future to improve efficiency.
 void tokensLinearize(std::vector<common::Token> &src,
@@ -138,8 +140,9 @@ unsigned getReductionSize(ProductionRule const& rule)
     unsigned size = 0;
     switch (rule) {
         default:
-            throw "parse_common::getReductionSize"
-                  " - Rule not found!\n";
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "parse_common::getReductionSize(ProductionRule const&)",
+                    "Rule not found.");
             break;
 
         case Procs_Exp_Nothing:     // fall-through
@@ -214,8 +217,9 @@ common::Kind getReductionKind(ProductionRule const& rule)
     common::Kind kind;
     switch (rule) {
         default:
-            throw "parse_common::getReductionKind"
-                  " - Rule not found!\n";
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "parse_common::getReductionKind(ProductionRule const&)",
+                    "Rule not found.");
             break;
 
         case Start_Exp_Proc:

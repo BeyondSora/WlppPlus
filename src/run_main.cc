@@ -16,7 +16,12 @@
 
 #include "error.h"
 
-run_main::run_main() {}
+run_main::run_main(int argc, char **argv)
+{
+    for (int i = 0; i < argc; ++i) {
+        flags_.push_back(argv[i]);
+    }
+}
 
 run_main::~run_main() {}
 
@@ -26,8 +31,7 @@ void run_main::run()
     //
     //
     try {
-
-        common::Lines lines = file::toLines("test.wlpp");
+        common::Lines lines = file::toLines(flags_.at(1));
 
         for (unsigned i = 0; i < lines.size(); ++i) {
             //std::cout << lines[i] << std::endl;
@@ -63,4 +67,7 @@ void run_main::run()
         std::cout << "Encountered unknown error." << std::endl;
         std::exit(1);
     }
+    ///
+    ///
+    ///
 }

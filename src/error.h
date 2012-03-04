@@ -22,15 +22,29 @@ namespace error {
 enum ErrorCode {
     // Default retCode == 1
 
-    // File namespace error codes.
+    // File specific error codes.
     FILE_CANNOT_OPEN,       // retCode == 4
     FILE_CANNOT_CLOSE,      // retCode == 5
+
+    // Scanning specific error codes.
+    LEX_ERROR,
+
+    // Production rule related error codes.
+    NO_MATCHING_PROD_RULE,  // retCode == 11
+
+    // Parse Tree error codes.
+    TREE_IS_NULL,           // retCode == 16
 };
 
 // Interface for ErrorObject.
+// Always use ErrorObjectPtr to wrap around it.
+// If any additional features not provided here are needed,
+//  inherit this class as parent class of ErrorObject in
+//  the corresponding namespace where the
+//  additional features are intended to be used.
 class ErrorObjectInterface {
+    friend class ErrorObjectPtr;
     public:
-        virtual ~ErrorObjectInterface();
         virtual std::string toString() const;
         int retCode() const;
     protected:
@@ -41,6 +55,17 @@ class ErrorObjectInterface {
         ErrorObjectInterface(ErrorCode errCode,
                              std::string errLocation,
                              std::string errMsg);
+        virtual ~ErrorObjectInterface();
+};
+
+// Basic ErrorObject with no additional features added.
+// If no need for additional error handling, use this instead.
+// Do NOT inherit this class!
+class ErrorObject: public ErrorObjectInterface {
+    public:
+        ErrorObject(ErrorCode errCode,
+                    std::string errLocation,
+                    std::string errMsg);
 };
 
 // Smart pointer container for ErrorObjectInterface*.
