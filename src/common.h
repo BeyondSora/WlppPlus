@@ -5,7 +5,7 @@
  *  included in this common namespace.
  *
  * Include this header as the first one of local headers
- *  in every other class/namespace.
+ *  in every other class/namespace that require shared information.
  ******************************************************************************/
 
 #ifndef COMMON_H

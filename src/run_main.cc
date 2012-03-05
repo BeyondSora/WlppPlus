@@ -5,10 +5,10 @@
 #include "run_main.h"
 
 #include <cstdlib>
-#include <iostream>
 
 #include "common.h"
 
+#include "basic_io.h"
 #include "context_free_parse.h"
 #include "file.h"
 #include "scan.h"
@@ -39,32 +39,32 @@ void run_main::run()
 
         common::Tokens tokens = scan::tokenize(lines);
 
-        std::cout << "SUCCEEDED" << std::endl;
+        basic_io::out("SUCCEEDED\n");
 
         for (unsigned i = 0; i < tokens.size(); ++i) {
             for (unsigned j = 0; j < tokens[i].size(); ++j) {
-                //std::cout << tokens[i][j].lexeme << " ";
-                std::cout << tokens[i][j].getKind() << ": " <<
-                    tokens[i][j].lexeme;
-                if (tokens[i][j].kind == common::INT)
-                    std::cout << ", number-form: " << tokens[i][j].toInt();
-                std::cout << std::endl;
+                basic_io::out(tokens[i][j].getKind() + ": " +
+                              tokens[i][j].lexeme);
+                if (tokens[i][j].kind == common::INT) {
+                    basic_io::out(", number-form: " + tokens[i][j].toInt());
+                }
+                basic_io::out("\n");
             }
-            std::cout << std::endl;
+            basic_io::out("\n");
         }
 
-        std::cout << "----PARSE TREE: \n";
+        basic_io::out("----PARSE TREE: \n");
         context_free_parse::ParseTree parseTree(tokens);
-        std::cout << parseTree.toString();
+        basic_io::out(parseTree.toString());
         semantic_parse::ParseTree semTree(parseTree.move());
     }
     catch (error::ErrorObjectInterface *e) {
         error::ErrorObjectPtr err(e);
-        std::cout << err->toString() << std::endl;
+        basic_io::out(err->toString() + "\n");
         std::exit(err->retCode());
     }
     catch (...) {
-        std::cout << "Encountered unknown error." << std::endl;
+        basic_io::out("Encountered unknown error.\n");
         std::exit(1);
     }
     ///
