@@ -58,8 +58,8 @@ class ErrorObjectInterface {
         virtual ~ErrorObjectInterface();
 };
 
-// Basic ErrorObject with no additional features added.
-// If no need for additional error handling, use this instead.
+// Basic ErrorObject with no additional features.
+// Use this when there is no need for additional error handling.
 // Do NOT inherit this class!
 class ErrorObject: public ErrorObjectInterface {
     public:
@@ -77,6 +77,8 @@ class ErrorObjectPtr {
     private:
         ErrorObjectInterface *err_;
 };
+
+void errOut(ErrorObjectInterface const* err);
 
 }
 

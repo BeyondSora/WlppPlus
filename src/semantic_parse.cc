@@ -32,6 +32,10 @@ void ParseTree::treeToVectorTree(Tree *tree, VectorTree &ret)
     }
 }
 
+void ParseTree::buildSymbolTable(Tree *tree, SymbolTable &symTable)
+{
+}
+
 void ParseTree::typeCheck(VectorTree const& ret)
 {
     //switch (ret.rule) {

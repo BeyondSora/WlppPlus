@@ -60,4 +60,9 @@ ErrorObjectInterface* ErrorObjectPtr::operator->()
 
 ///
 
+void errOut(ErrorObjectInterface const* err)
+{
+    //out::msg(err->toString());
+}
+
 }

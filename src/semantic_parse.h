@@ -11,6 +11,9 @@
 #define SEMANTIC_PARSE_H
 
 #include "common.h"
+
+#include <map>
+
 #include "parse_common.h"
 
 namespace semantic_parse {
@@ -25,13 +28,18 @@ struct VectorTree {
 };
 
 class ParseTree: public ParseTreeInterface {
+    typedef std::map<std::string, std::string> SymbolTable;
     public:
         explicit ParseTree(Tree* tree);
     private:
         VectorTree vecTree_;
+        SymbolTable symTable_;
 
-        // Converts a Tree* structure into a VectorTree structure.
-        static void treeToVectorTree(Tree* tree, VectorTree &ret);
+        // Converts a Tree* structure into a VectorTree structure,
+        //  which is efficient for type-checking.
+        static void treeToVectorTree(Tree *tree, VectorTree &ret);
+        // Build a symbol table from the parse tree.
+        static void buildSymbolTable(Tree *tree, SymbolTable &symTable);
         // Typecheck the parse tree to make sure it is semantically correct.
         static void typeCheck(VectorTree const& ret);
 };
