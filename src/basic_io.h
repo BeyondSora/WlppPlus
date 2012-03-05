@@ -17,14 +17,14 @@
 
 namespace basic_io {
 
-enum Basic_io_flags {
+enum Flags {
     ERROR,
     INFO,
 };
 
 // Outputs msg to stdout/stderr depending on error flag.
 // When not specified, flag defaults to INFO.
-void out(std::string const& msg, Basic_io_flags flag = INFO);
+void out(std::string const& msg, Flags flag = INFO);
 
 }
 

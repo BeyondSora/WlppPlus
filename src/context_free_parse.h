@@ -8,6 +8,7 @@
  * More implementation details are placed in source file,
  *  but end users should have no need for those.
  ******************************************************************************/
+
 #ifndef CONTEXT_FREE_PARSE_H
 #define CONTEXT_FREE_PARSE_H
 

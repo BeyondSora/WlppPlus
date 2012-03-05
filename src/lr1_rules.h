@@ -6,6 +6,7 @@
  * This file is intended to be included in context_free_parse.cc
  * No other file should need this header.
  ******************************************************************************/
+
 #ifndef LR1_RULES_H
 #define LR1_RULES_H
 

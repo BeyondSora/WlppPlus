@@ -6,7 +6,7 @@
 
 namespace basic_io {
 
-void out(std::string const& msg, Basic_io_flags flag) {
+void out(std::string const& msg, Flags flag) {
     switch (flag) {
         default:
             throw "error";
