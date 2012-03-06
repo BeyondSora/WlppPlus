@@ -104,6 +104,16 @@ enum ProductionRule {
     NUL_RULE,               // NOT A PRODUCTION RULE
 };
 
+// Variable Types
+enum Type {
+    INT,
+    INT_STAR,
+    CHAR,
+    CHAR_STAR,
+};
+
+std::string getType(Type type);
+
 // Base unit for ParseTree.
 // There should not be a need to create an instance of this class.
 class Tree {

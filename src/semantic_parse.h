@@ -29,10 +29,12 @@ struct VectorTree {
 };
 
 class ParseTree: public ParseTreeInterface {
-    typedef std::map<std::string, std::string> SymbolTable; // function-wide
-    typedef std::map<std::string, SymbolTable> SymbolTables;// sourcecode-wide
+    typedef std::map<std::string, Type> SymbolTable; // function-wide
+    typedef std::map<std::string, SymbolTable> SymbolTables; // sourcecode-wide
     public:
         explicit ParseTree(Tree* tree);
+        // Convert SymbolTables to string format.
+        std::string symTablesToString();
     private:
         VectorTree vecTree_;
         SymbolTables symTables_;
@@ -47,10 +49,12 @@ class ParseTree: public ParseTreeInterface {
         //  returns the id of the function.
         static std::string buildSymbolTable(VectorTree &vecTree,
                                      SymbolTable &symTable);
-        // Add new symbol table to the SymbolTables.
-        static void addNewSymbolTable(SymbolTables &symTables,
-                                      SymbolTable &symTable,
-                                      std::string funcName);
+        // Add new member to the std::map.
+        // Intended for both SymbolTable and SymbolTables type.
+        template <typename Map, // must be std::map
+                  typename Key,
+                  typename Value>
+        static void addNew(Map &map, Key const& key, Value const& val);
         // Typecheck the parse tree to make sure it is semantically correct.
         static void typeCheck(VectorTree &ret);
 };

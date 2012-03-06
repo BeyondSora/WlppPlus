@@ -57,6 +57,9 @@ void run_main::run()
         context_free_parse::ParseTree parseTree(tokens);
         basic_io::out(parseTree.toString());
         semantic_parse::ParseTree semTree(parseTree.move());
+
+        basic_io::out("----Symbol Table: \n");
+        basic_io::out(semTree.symTablesToString() + "\n");
     }
     catch (error::ErrorObjectInterface *e) {
         error::ErrorObjectPtr err(e);

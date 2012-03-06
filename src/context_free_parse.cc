@@ -49,6 +49,7 @@ Tree* ParseTree::build_parse_tree(common::Tokens const& tokens)
 
     Tree *root = new Tree();            // Root of the parse tree.
     root->token.kind = common::Start;
+    root->rule = Start_Exp_Proc;
 
     Tree *curNode = root;               // Current node in the parse tree.
     bool isStateAfterReduction = false; // Determines if the current state

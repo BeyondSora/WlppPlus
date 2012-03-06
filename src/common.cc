@@ -127,7 +127,8 @@ int Token::toInt()
     else throw NOT_AN_INT;
     return integer;
 }
-//
+
+///
 
 std::string toString(unsigned num)
 {

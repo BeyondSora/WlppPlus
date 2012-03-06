@@ -176,6 +176,24 @@ std::string translateProductionRule(const ProductionRule &rule)
     return translation;
 }
 
+std::string getType(Type type)
+{
+    switch (type) {
+        default:
+            throw "Unknown Type\n";
+
+        case INT:
+            return "int";
+        case INT_STAR:
+            return "int*";
+        case CHAR:
+            return "char";
+        case CHAR_STAR:
+            return "char*";
+    }
+    return "";
+}
+
 //
 // Tree class
 
