@@ -59,7 +59,7 @@ void run_main::run()
         semantic_parse::ParseTree semTree(parseTree.move());
 
         basic_io::out("----Symbol Table: \n");
-        basic_io::out(semTree.symTablesToString() + "\n");
+        basic_io::out(semTree.symTablesToString());
     }
     catch (error::ErrorObjectInterface *e) {
         error::ErrorObjectPtr err(e);

@@ -19,7 +19,7 @@ ParseTree::ParseTree(Tree *tree) : ParseTreeInterface(tree)
     treeToVectorTree(tree_->next, vecTree_);
 
     // Build symbol table.
-    buildSymbolTables(vecTree_, symTables_);
+    buildSymbolTables(vecTree_, symTables_, fcnTable_);
 }
 
 std::string ParseTree::symTablesToString()
@@ -28,12 +28,13 @@ std::string ParseTree::symTablesToString()
     for (SymbolTables::iterator i = symTables_.begin();
          i != symTables_.end();
          ++i) {
-        ret += "Function: \"" + i->first + "\"\n";
+        ret += "Function: \"" + i->first + "\" -> " +
+               typeToString(fcnTable_[i->first]) + "\n";
 
         for (SymbolTable::iterator j = i->second.begin();
              j != i->second.end();
              ++j) {
-            ret += j->first + ": " + getType(j->second) + "\n";
+            ret += j->first + ": " + typeToString(j->second) + "\n";
         }
     }
     return ret;
@@ -54,28 +55,36 @@ void ParseTree::treeToVectorTree(Tree *tree, VectorTree &ret)
 }
 
 void ParseTree::buildSymbolTables(VectorTree &vecTree,
-                                  SymbolTables &symTables)
+                                  SymbolTables &symTables,
+                                  SymbolTable &fcnTable)
 {
     switch (vecTree.rule) {
         default:
             return;
 
         case Start_Exp_Proc:
-            buildSymbolTables(vecTree.leaves[1], symTables);
+            buildSymbolTables(vecTree.leaves[1], symTables, fcnTable);
             break;
         case Procs_Exp_ProcW_Procs: // fall-through
         case Procs_Exp_Procs_Proc:
-            buildSymbolTables(vecTree.leaves[0], symTables);
-            buildSymbolTables(vecTree.leaves[1], symTables);
+            buildSymbolTables(vecTree.leaves[0], symTables, fcnTable);
+            buildSymbolTables(vecTree.leaves[1], symTables, fcnTable);
             break;
 
         // Build symbol table for each function.
         case ProcW_Exp: // fall-through
         case Proc_Exp:
+            // Build symbol table for the function itself.
             SymbolTable symTable;
             std::string funcName = buildSymbolTable(vecTree, symTable);
             addNew<SymbolTables, std::string, SymbolTable>
                   (symTables, funcName, symTable);
+
+            // Index this function and its return type into fcnTable_;
+            Type fcnType = (vecTree.rule == ProcW_Exp ?
+                            INT : getType(vecTree.leaves[0]));
+            addNew<SymbolTable, std::string, Type>
+                  (fcnTable, funcName, fcnType);
             break;
     }
 }
@@ -108,20 +117,10 @@ std::string ParseTree::buildSymbolTable(VectorTree &vecTree,
             common::Kind symKind = vecTree.leaves[0].leaves[0].token.kind;
             Type symType;
             if (vecTree.leaves[0].leaves.size() == 2) {
-                if (symKind == common::INTK) {
-                    symType = INT_STAR;
-                }
-                else {  // == common::CHARK
-                    symType = CHAR_STAR;
-                }
+                symType = kindToType(symKind, common::STAR);
             }
             else {  // size == 1
-                if (symKind == common::INTK) {
-                    symType = INT;
-                }
-                else {  // == common::CHARK
-                    symType = CHAR;
-                }
+                symType = kindToType(symKind);
             }
             addNew<SymbolTable, std::string, Type>
                   (symTable, symName, symType);
@@ -130,7 +129,9 @@ std::string ParseTree::buildSymbolTable(VectorTree &vecTree,
     return "";
 }
 
-template <typename Map, typename Key, typename Value>
+template <typename Map,
+          typename Key,
+          typename Value>
 void ParseTree::addNew(Map &map, Key const& key, Value const& val)
 {
     if (!map.count(key)) {
@@ -141,10 +142,48 @@ void ParseTree::addNew(Map &map, Key const& key, Value const& val)
     }
 }
 
+Type ParseTree::getType(VectorTree &vecTree)
+{
+    Type type;
+    switch (vecTree.rule) {
+        default:
+            throw "Not a valid structure to query for type.\n";
+
+        case Type_Exp_Intk: type = INT; break;
+        case Type_Exp_IntkStar: type = INT_STAR; break;
+        case Type_Exp_Chark: type = CHAR; break;
+        case Type_Exp_CharkStar: type = CHAR_STAR; break;
+    }
+    return type;
+}
+
+Type ParseTree::getType(VectorTree &vecTree, std::string fcnName)
+{
+    // to be implemented
+}
+
 void ParseTree::typeCheck(VectorTree &ret)
 {
-    //switch (ret.rule) {
-    //}
+    switch (ret.rule) {
+        default:    // Do nothing.
+            break;
+
+        case Procs_Exp_ProcW_Procs: // fall-through
+        case Procs_Exp_Procs_Proc:
+            typeCheck(ret.leaves[0]);
+            // fall-through
+        case Start_Exp_Proc:
+            typeCheck(ret.leaves[1]);
+            break;
+        case ProcW_Exp: // fall-through
+        case Proc_Exp:
+            typeCheck(ret.leaves[8]);
+            typeCheck(ret.leaves[9]);
+
+            Type retType;
+            // to be implemented
+            break;
+    }
 }
 
 ///

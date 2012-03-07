@@ -176,7 +176,29 @@ std::string translateProductionRule(const ProductionRule &rule)
     return translation;
 }
 
-std::string getType(Type type)
+Type kindToType(common::Kind kind_1, common::Kind kind_2)
+{
+    Type symType;
+    if (kind_2 == common::STAR) {
+        if (kind_1 == common::INTK) {
+            symType = INT_STAR;
+        }
+        else {  // == common::CHARK
+            symType = CHAR_STAR;
+        }
+    }
+    else {  // NOT a pointer
+        if (kind_1 == common::INTK) {
+            symType = INT;
+        }
+        else {  // == common::CHARK
+            symType = CHAR;
+        }
+    }
+    return symType;
+}
+
+std::string typeToString(Type type)
 {
     switch (type) {
         default:

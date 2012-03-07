@@ -112,7 +112,11 @@ enum Type {
     CHAR_STAR,
 };
 
-std::string getType(Type type);
+// Convert Kind to Type
+Type kindToType(common::Kind kind_1, common::Kind kind_2 = common::NUL);
+
+// Convert Type to std::string
+std::string typeToString(Type type);
 
 // Base unit for ParseTree.
 // There should not be a need to create an instance of this class.

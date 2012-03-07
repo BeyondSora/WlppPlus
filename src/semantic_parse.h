@@ -29,14 +29,15 @@ struct VectorTree {
 };
 
 class ParseTree: public ParseTreeInterface {
-    typedef std::map<std::string, Type> SymbolTable; // function-wide
-    typedef std::map<std::string, SymbolTable> SymbolTables; // sourcecode-wide
+    typedef std::map<std::string, Type> SymbolTable;
+    typedef std::map<std::string, SymbolTable> SymbolTables;
     public:
         explicit ParseTree(Tree* tree);
         // Convert SymbolTables to string format.
         std::string symTablesToString();
     private:
         VectorTree vecTree_;
+        SymbolTable fcnTable_;
         SymbolTables symTables_;
 
         // Converts a Tree* structure into a VectorTree structure,
@@ -44,19 +45,27 @@ class ParseTree: public ParseTreeInterface {
         static void treeToVectorTree(Tree *tree, VectorTree &ret);
         // Build symbol tables for the whole source code from the parse tree.
         static void buildSymbolTables(VectorTree &vecTree,
-                                      SymbolTables &symTables);
+                                      SymbolTables &symTables,
+                                      SymbolTable &fcnTable);
         // Build symbol table for one function, and
         //  returns the id of the function.
         static std::string buildSymbolTable(VectorTree &vecTree,
-                                     SymbolTable &symTable);
+                                            SymbolTable &symTable);
         // Add new member to the std::map.
         // Intended for both SymbolTable and SymbolTables type.
         template <typename Map, // must be std::map
                   typename Key,
                   typename Value>
         static void addNew(Map &map, Key const& key, Value const& val);
+        // Return Type information about the tree.
+        // Intended for Type_Exp only
+        static Type getType(VectorTree &vecTree);
+        // Return Type information about the tree.
+        // Intended for deducing type information related to
+        //  symTables_ and fcnTable_.
+        Type getType(VectorTree &vecTree, std::string fcnName);
         // Typecheck the parse tree to make sure it is semantically correct.
-        static void typeCheck(VectorTree &ret);
+        void typeCheck(VectorTree &ret);
 };
 
 }
