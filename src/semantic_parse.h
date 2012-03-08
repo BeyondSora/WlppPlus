@@ -63,7 +63,7 @@ class ParseTree: public ParseTreeInterface {
         // Return Type information about the tree.
         // Intended for deducing type information related to
         //  symTables_ and fcnTable_.
-        Type getType(VectorTree &vecTree, std::string fcnName);
+        Type getFtorType(VectorTree &vecTree, std::string fcnName);
         // Typecheck the parse tree to make sure it is semantically correct.
         void typeCheck(VectorTree &ret);
 };

@@ -157,9 +157,23 @@ Type ParseTree::getType(VectorTree &vecTree)
     return type;
 }
 
-Type ParseTree::getType(VectorTree &vecTree, std::string fcnName)
+Type ParseTree::getFtorType(VectorTree &vecTree, std::string fcnName)
 {
-    // to be implemented
+    Type type;
+    switch (vecTree.rule) {
+        default:
+            throw "Not a valid structure to query for type.\n";
+
+        case Ftor_Exp_Id:
+            type = symTables_[fcnName][vecTree.leaves[0].token.lexeme];
+            break;
+        case Lval_Exp_Id:
+            type = symTables_[fcnName][vecTree.leaves[0].token.lexeme];
+            break;
+
+        // to be implemented
+    }
+    return type;
 }
 
 void ParseTree::typeCheck(VectorTree &ret)
