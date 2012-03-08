@@ -157,7 +157,7 @@ Type ParseTree::getType(VectorTree &vecTree)
     return type;
 }
 
-Type ParseTree::getFtorType(VectorTree &vecTree, std::string fcnName)
+Type ParseTree::checkFtorType(VectorTree &vecTree, std::string const& fcnName)
 {
     Type type;
     switch (vecTree.rule) {
@@ -167,13 +167,69 @@ Type ParseTree::getFtorType(VectorTree &vecTree, std::string fcnName)
         case Ftor_Exp_Id:
             type = symTables_[fcnName][vecTree.leaves[0].token.lexeme];
             break;
+        case Ftor_Exp_Int:
+            type = INT;
+            break;
+        case Ftor_Exp_Char:
+            type = CHAR;
+            break;
+        case Ftor_Exp_Nul:
+            type = NUL;
+            break;
+        case Ftor_Exp_Expr:
+            type = checkExprType(vecTree.leaves[1], fcnName);
+            break;
+        case Ftor_Exp_Addr:
+            switch (checkLvalType(vecTree.leaves[1], fcnName)) {
+                default:
+                    throw "wrong type\n";
+
+                case INT:
+                    type = INT_STAR;
+                case CHAR:
+                    type = CHAR_STAR;
+            }
+            break;
+        case Ftor_Exp_Ptr:
+            switch (checkLvalType(vecTree.leaves[1], fcnName)) {
+                default:
+                    throw "wrong type\n";
+
+                case INT_STAR:
+                    type = INT;
+                case CHAR_STAR:
+                    type = CHAR;
+            }
+            break;
+    }
+    return type;
+}
+
+Type ParseTree::checkLvalType(VectorTree &vecTree, std::string const& fcnName)
+{
+    Type type;
+    switch (vecTree.rule) {
+        default:
+            throw "Not a valid structure to query for type.\n";
+
         case Lval_Exp_Id:
             type = symTables_[fcnName][vecTree.leaves[0].token.lexeme];
             break;
+        case Lval_Exp_Ptr:
+            switch (checkFtorType(vecTree.leaves[1], fcnName)) {
+                default:
+                    throw "wrong type\n";
 
-        // to be implemented
+                case INT_STAR:
+                    type = INT;
+                case CHAR_STAR:
+                    type = CHAR;
+            }
+            break;
+        case Lval_Exp_Lval:
+            type = checkLvalType(vecTree.leaves[1], fcnName);
+            break;
     }
-    return type;
 }
 
 void ParseTree::typeCheck(VectorTree &ret)

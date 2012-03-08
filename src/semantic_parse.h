@@ -60,12 +60,15 @@ class ParseTree: public ParseTreeInterface {
         // Return Type information about the tree.
         // Intended for Type_Exp only
         static Type getType(VectorTree &vecTree);
-        // Return Type information about the tree.
-        // Intended for deducing type information related to
-        //  symTables_ and fcnTable_.
-        Type getFtorType(VectorTree &vecTree, std::string fcnName);
         // Typecheck the parse tree to make sure it is semantically correct.
         void typeCheck(VectorTree &ret);
+        // Check Type information about the tree.
+        // Intended for deducing type information related to
+        //  symTables_ and fcnTable_.
+        Type checkExprType(VectorTree &vecTree, std::string const& fcnName);
+        Type checkTermType(VectorTree &vecTree, std::string const& fcnName);
+        Type checkFtorType(VectorTree &vecTree, std::string const& fcnName);
+        Type checkLvalType(VectorTree &vecTree, std::string const& fcnName);
 };
 
 }

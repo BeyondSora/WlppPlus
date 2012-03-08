@@ -212,6 +212,8 @@ std::string typeToString(Type type)
             return "char";
         case CHAR_STAR:
             return "char*";
+        case NUL:
+            return "NULL";
     }
     return "";
 }

@@ -110,6 +110,7 @@ enum Type {
     INT_STAR,
     CHAR,
     CHAR_STAR,
+    NUL,
 };
 
 // Convert Kind to Type
