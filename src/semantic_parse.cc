@@ -20,6 +20,9 @@ ParseTree::ParseTree(Tree *tree) : ParseTreeInterface(tree)
 
     // Build symbol table.
     buildSymbolTables(vecTree_, symTables_, fcnTable_);
+
+    // Type Check
+    typeCheck(vecTree_);
 }
 
 std::string ParseTree::symTablesToString()
@@ -157,6 +160,85 @@ Type ParseTree::getType(VectorTree &vecTree)
     return type;
 }
 
+Type ParseTree::checkExprType(VectorTree &vecTree, std::string const& fcnName)
+{
+    Type type;
+    Type typeExpr, typeTerm;
+    switch (vecTree.rule) {
+        default:
+            throw "Not a valid structure to query for type.\n";
+
+        case Expr_Exp_Term:
+            type = checkTermType(vecTree.leaves[0], fcnName);
+            break;
+        case Expr_Exp_Plus:
+            typeExpr = checkExprType(vecTree.leaves[0], fcnName);
+            typeTerm = checkTermType(vecTree.leaves[2], fcnName);
+            if (typeExpr == INT && typeTerm == INT) {
+                type = INT;
+            }
+            else if ((typeExpr == INT_STAR && typeTerm == INT) ||
+                    (typeExpr == INT && typeTerm == INT_STAR)) {
+                type = INT_STAR;
+            }
+            else if ((typeExpr == CHAR_STAR && typeTerm == INT) ||
+                    (typeExpr == INT && typeTerm == CHAR_STAR)) {
+                type = CHAR_STAR;
+            }
+            else {
+                throw "Invalid operation. Expr_Exp_Plus "
+                      "not allowed for this combination of types.\n";
+            }
+            break;
+        case Expr_Exp_Minus:
+            typeExpr = checkExprType(vecTree.leaves[0], fcnName);
+            typeTerm = checkTermType(vecTree.leaves[2], fcnName);
+            if ((typeExpr == INT && typeTerm == INT) ||
+               (typeExpr == INT_STAR && typeTerm == INT_STAR) ||
+               (typeExpr == CHAR_STAR && typeTerm == CHAR_STAR)) {
+                type = INT;
+            }
+            else if (typeExpr == INT_STAR && typeTerm == INT) {
+                type = INT_STAR;
+            }
+            else if (typeExpr == CHAR_STAR && typeTerm == CHAR) {
+                type = CHAR_STAR;
+            }
+            else {
+                throw "Invalid operation. Expr_Exp_Minus "
+                      "not allowed for this combination of types.\n";
+            }
+            break;
+    }
+    return type;
+}
+
+Type ParseTree::checkTermType(VectorTree &vecTree, std::string const& fcnName)
+{
+    Type type;
+    switch (vecTree.rule) {
+        default:
+            throw "Not a valid structure to query for type.\n";
+
+        case Term_Exp_Ftor:
+            type = checkFtorType(vecTree.leaves[0], fcnName);
+            break;
+        case Term_Exp_Star:     // fall-through
+        case Term_Exp_Slash:    // fall-through
+        case Term_Exp_Pct:
+            if (checkTermType(vecTree.leaves[0], fcnName) == INT &&
+                checkTermType(vecTree.leaves[2], fcnName) == INT) {
+                type = INT;
+            }
+            else {
+                throw "Invalid operation. Multiplication/Division/Mod "
+                      "only allowed for integers.\n";
+            }
+            break;
+    }
+    return type;
+}
+
 Type ParseTree::checkFtorType(VectorTree &vecTree, std::string const& fcnName)
 {
     Type type;
@@ -230,9 +312,10 @@ Type ParseTree::checkLvalType(VectorTree &vecTree, std::string const& fcnName)
             type = checkLvalType(vecTree.leaves[1], fcnName);
             break;
     }
+    return type;
 }
 
-void ParseTree::typeCheck(VectorTree &ret)
+void ParseTree::typeCheck(VectorTree &ret, std::string const& fcnName)
 {
     switch (ret.rule) {
         default:    // Do nothing.
@@ -247,11 +330,64 @@ void ParseTree::typeCheck(VectorTree &ret)
             break;
         case ProcW_Exp: // fall-through
         case Proc_Exp:
-            typeCheck(ret.leaves[8]);
-            typeCheck(ret.leaves[9]);
+            typeCheck(ret.leaves[8], ret.leaves[1].token.lexeme);
+            typeCheck(ret.leaves[9], ret.leaves[1].token.lexeme);
 
-            Type retType;
-            // to be implemented
+            if (checkExprType(ret.leaves[11], ret.leaves[1].token.lexeme) !=
+               (ret.rule == ProcW_Exp ? INT : getType(ret.leaves[0]))) {
+                throw "Return type does not match function signature.\n";
+            }
+            break;
+        case Dcls_Exp_Assign:
+            typeCheck(ret.leaves[0], fcnName);
+            if (getType(ret.leaves[1].leaves[0]) !=
+                checkExprType(ret.leaves[3], fcnName)) {
+                std::cout << "eee" << std::endl;
+                throw "Cannot assign, lhs and rhs types are not the same\n";
+            }
+            break;
+        case Stmnts_Exp_Stmnts_Stmnt:
+            typeCheck(ret.leaves[0], fcnName);
+            typeCheck(ret.leaves[1], fcnName);
+            break;
+        case Stmnt_Exp_Assign:
+            if (checkLvalType(ret.leaves[0], fcnName) !=
+                checkExprType(ret.leaves[2], fcnName)) {
+                throw "Cannot assign, lhs and rhs types are not the same\n";
+            }
+            break;
+        case Stmnt_Exp_If:
+            typeCheck(ret.leaves[2], fcnName);
+            typeCheck(ret.leaves[5], fcnName);
+            break;
+        case Stmnt_Exp_If_Else:
+            typeCheck(ret.leaves[2], fcnName);
+            typeCheck(ret.leaves[5], fcnName);
+            typeCheck(ret.leaves[9], fcnName);
+            break;
+        case Stmnt_Exp_While:
+            typeCheck(ret.leaves[2], fcnName);
+            typeCheck(ret.leaves[5], fcnName);
+            break;
+        case Tests_Exp_Tests_Test:
+            typeCheck(ret.leaves[0], fcnName);
+            typeCheck(ret.leaves[2], fcnName);
+            break;
+        case Tests_Exp_Test:
+            typeCheck(ret.leaves[0], fcnName);
+            break;
+        case Test_Exp_Eq:   // fall-through
+        case Test_Exp_Ne:   // fall-through
+        case Test_Exp_Lt:   // fall-through
+        case Test_Exp_Le:   // fall-through
+        case Test_Exp_Ge:   // fall-through
+        case Test_Exp_Gt:
+            if (!((checkExprType(ret.leaves[0], fcnName) == INT &&
+                  checkExprType(ret.leaves[2], fcnName) == INT) ||
+                  (checkExprType(ret.leaves[0], fcnName) == CHAR &&
+                  checkExprType(ret.leaves[2], fcnName) == CHAR))) {
+                throw "comparison only allowed between INT or between CHAR\n";
+            }
             break;
     }
 }

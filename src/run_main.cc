@@ -63,11 +63,11 @@ void run_main::run()
     }
     catch (error::ErrorObjectInterface *e) {
         error::ErrorObjectPtr err(e);
-        basic_io::out(err->toString() + "\n");
+        basic_io::out(err->toString() + "\n", basic_io::ERROR);
         std::exit(err->retCode());
     }
     catch (...) {
-        basic_io::out("Encountered unknown error.\n");
+        basic_io::out("Encountered unknown error.\n", basic_io::ERROR);
         std::exit(1);
     }
     ///

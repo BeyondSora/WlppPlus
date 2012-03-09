@@ -61,7 +61,7 @@ class ParseTree: public ParseTreeInterface {
         // Intended for Type_Exp only
         static Type getType(VectorTree &vecTree);
         // Typecheck the parse tree to make sure it is semantically correct.
-        void typeCheck(VectorTree &ret);
+        void typeCheck(VectorTree &ret, std::string const& fcnName = "");
         // Check Type information about the tree.
         // Intended for deducing type information related to
         //  symTables_ and fcnTable_.

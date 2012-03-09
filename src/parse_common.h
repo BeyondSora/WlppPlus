@@ -62,12 +62,12 @@ enum ProductionRule {
     Stmnts_Exp_Stmnts_Stmnt,// statements -> statements statement
     Stmnts_Exp_Nothing,     // statements -> Nothing
     Stmnt_Exp_Assign,       // statement -> lvalue BECOMES expr SEMI
-    Stmnt_Exp_If,           // statement -> IF LPAREN tests AND test RPAREN
+    Stmnt_Exp_If,           // statement -> IF LPAREN tests RPAREN
                             //               LBRACE statements RBRACE
-    Stmnt_Exp_If_Else,      // statement -> IF LPAREN tests AND test RPAREN
+    Stmnt_Exp_If_Else,      // statement -> IF LPAREN tests RPAREN
                             //               LBRACE statements RBRACE
                             //               ELSE LBRACE statements RBRACE
-    Stmnt_Exp_While,        // statement -> WHILE LPAREN tests AND test RPAREN
+    Stmnt_Exp_While,        // statement -> WHILE LPAREN tests RPAREN
                             //               LBRACE statements RBRACE
 
     Tests_Exp_Tests_Test,   // tests -> tests AND test

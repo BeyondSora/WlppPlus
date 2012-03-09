@@ -6,12 +6,13 @@
 
 namespace basic_io {
 
-void out(std::string const& msg, Flags flag) {
+void out(std::string const& msg, Flag flag) {
     switch (flag) {
         default:
             throw "error";
             break;
-        case ERROR:
+        case ERROR: // fall-through
+        case WARN:
             std::cerr << msg;
             break;
         case INFO:
