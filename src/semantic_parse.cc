@@ -141,7 +141,11 @@ void ParseTree::addNew(Map &map, Key const& key, Value const& val)
         map[key] = val;
     }
     else {
-        throw "error! Duplicates!\n";
+        throw new error::ErrorObject(error::EXISTS_DUPLICATE_SYMBOL,
+                "semantic_parse::ParseTree::addNew"
+                "(Map &, Key const&, Value const&)",
+                "There already exists an identical symbol: \"" +
+                common::toString(key) + "\".");
     }
 }
 
@@ -150,7 +154,9 @@ Type ParseTree::getType(VectorTree &vecTree)
     Type type;
     switch (vecTree.rule) {
         default:
-            throw "Not a valid structure to query for type.\n";
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "semantic_parse::ParseTree::getType(VectorTree &)",
+                    "No production rule matched!");
 
         case Type_Exp_Intk: type = INT; break;
         case Type_Exp_IntkStar: type = INT_STAR; break;
@@ -166,7 +172,10 @@ Type ParseTree::checkExprType(VectorTree &vecTree, std::string const& fcnName)
     Type typeExpr, typeTerm;
     switch (vecTree.rule) {
         default:
-            throw "Not a valid structure to query for type.\n";
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "semantic_parse::ParseTree::checkExprType"
+                    "(VectorTree &, std::string const&)",
+                    "No production rule matched!");
 
         case Expr_Exp_Term:
             type = checkTermType(vecTree.leaves[0], fcnName);
@@ -186,8 +195,12 @@ Type ParseTree::checkExprType(VectorTree &vecTree, std::string const& fcnName)
                 type = CHAR_STAR;
             }
             else {
-                throw "Invalid operation. Expr_Exp_Plus "
-                      "not allowed for this combination of types.\n";
+                throw new error::ErrorObject(error::EXPR_FAULT,
+                        "semantic_parse::ParseTree::checkExprType"
+                        "(VectorTree &, std::string const&)",
+                        "ProductionRule \"Expr_Exp_Plus\" only allows: "
+                        "(int + int), (int* + int), (int + int*), "
+                        "(char* + int), and (int + char*).");
             }
             break;
         case Expr_Exp_Minus:
@@ -205,8 +218,12 @@ Type ParseTree::checkExprType(VectorTree &vecTree, std::string const& fcnName)
                 type = CHAR_STAR;
             }
             else {
-                throw "Invalid operation. Expr_Exp_Minus "
-                      "not allowed for this combination of types.\n";
+                throw new error::ErrorObject(error::EXPR_FAULT,
+                        "semantic_parse::ParseTree::checkExprType"
+                        "(VectorTree &, std::string const&)",
+                        "ProductionRule \"Expr_Exp_Plus\" only allows: "
+                        "(int - int), (int* - int), (int* - int*), "
+                        "(char* - int), and (char* - char*).");
             }
             break;
     }
@@ -218,7 +235,10 @@ Type ParseTree::checkTermType(VectorTree &vecTree, std::string const& fcnName)
     Type type;
     switch (vecTree.rule) {
         default:
-            throw "Not a valid structure to query for type.\n";
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "semantic_parse::ParseTree::checkTermType"
+                    "(VectorTree &, std::string const&)",
+                    "No production rule matched!");
 
         case Term_Exp_Ftor:
             type = checkFtorType(vecTree.leaves[0], fcnName);
@@ -231,8 +251,11 @@ Type ParseTree::checkTermType(VectorTree &vecTree, std::string const& fcnName)
                 type = INT;
             }
             else {
-                throw "Invalid operation. Multiplication/Division/Mod "
-                      "only allowed for integers.\n";
+                throw new error::ErrorObject(error::TERM_FAULT,
+                        "semantic_parse::ParseTree::checkTermType"
+                        "(VectorTree &vecTree, std::string const&)",
+                        "Multiplication/Division/Mod "
+                        "only allowed for integers.");
             }
             break;
     }
@@ -244,7 +267,10 @@ Type ParseTree::checkFtorType(VectorTree &vecTree, std::string const& fcnName)
     Type type;
     switch (vecTree.rule) {
         default:
-            throw "Not a valid structure to query for type.\n";
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "semantic_parse::ParseTree::checkFtorType"
+                    "(VectorTree &, std::string const&)",
+                    "No production rule matched!");
 
         case Ftor_Exp_Id:
             type = symTables_[fcnName][vecTree.leaves[0].token.lexeme];
@@ -264,7 +290,10 @@ Type ParseTree::checkFtorType(VectorTree &vecTree, std::string const& fcnName)
         case Ftor_Exp_Addr:
             switch (checkLvalType(vecTree.leaves[1], fcnName)) {
                 default:
-                    throw "wrong type\n";
+                    throw new error::ErrorObject(error::FTOR_FAULT,
+                            "semantic_parse::ParseTree::checkFtorType"
+                            "(VectorTree &, std::string const&)",
+                            "Can only take the address of an int or char");
 
                 case INT:
                     type = INT_STAR;
@@ -275,7 +304,10 @@ Type ParseTree::checkFtorType(VectorTree &vecTree, std::string const& fcnName)
         case Ftor_Exp_Ptr:
             switch (checkLvalType(vecTree.leaves[1], fcnName)) {
                 default:
-                    throw "wrong type\n";
+                    throw new error::ErrorObject(error::FTOR_FAULT,
+                            "semantic_parse::ParseTree::checkFtorType"
+                            "(VectorTree &, std::string const&)",
+                            "Can only take the dereference an int* or char*");
 
                 case INT_STAR:
                     type = INT;
@@ -292,7 +324,10 @@ Type ParseTree::checkLvalType(VectorTree &vecTree, std::string const& fcnName)
     Type type;
     switch (vecTree.rule) {
         default:
-            throw "Not a valid structure to query for type.\n";
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "semantic_parse::ParseTree::checkLvalType"
+                    "(VectorTree &, std::stringc onst&)",
+                    "No production rule matched!");
 
         case Lval_Exp_Id:
             type = symTables_[fcnName][vecTree.leaves[0].token.lexeme];
@@ -300,7 +335,10 @@ Type ParseTree::checkLvalType(VectorTree &vecTree, std::string const& fcnName)
         case Lval_Exp_Ptr:
             switch (checkFtorType(vecTree.leaves[1], fcnName)) {
                 default:
-                    throw "wrong type\n";
+                    throw new error::ErrorObject(error::LVAL_FAULT,
+                            "semantic_parse::ParseTree::checkLvalType"
+                            "(VectorTree &, std::string const&)",
+                            "Can only take the dereference an int* or char*");
 
                 case INT_STAR:
                     type = INT;
@@ -335,15 +373,20 @@ void ParseTree::typeCheck(VectorTree &ret, std::string const& fcnName)
 
             if (checkExprType(ret.leaves[11], ret.leaves[1].token.lexeme) !=
                (ret.rule == ProcW_Exp ? INT : getType(ret.leaves[0]))) {
-                throw "Return type does not match function signature.\n";
+                throw new error::ErrorObject(error::RET_NO_MATCH,
+                        "semantic_parse::ParseTree::typeCheck"
+                        "(VectorTree &, std::string const&)",
+                        "Return type does not match function signature.");
             }
             break;
         case Dcls_Exp_Assign:
             typeCheck(ret.leaves[0], fcnName);
             if (getType(ret.leaves[1].leaves[0]) !=
                 checkExprType(ret.leaves[3], fcnName)) {
-                std::cout << "eee" << std::endl;
-                throw "Cannot assign, lhs and rhs types are not the same\n";
+                throw new error::ErrorObject(error::LHS_RHS_NOT_SAME,
+                        "semantic_parse::ParseTree::typeCheck"
+                        "(VectorTree &, std::string const&)",
+                        "Cannot assign, lhs and rhs types are not the same");
             }
             break;
         case Stmnts_Exp_Stmnts_Stmnt:
@@ -353,7 +396,10 @@ void ParseTree::typeCheck(VectorTree &ret, std::string const& fcnName)
         case Stmnt_Exp_Assign:
             if (checkLvalType(ret.leaves[0], fcnName) !=
                 checkExprType(ret.leaves[2], fcnName)) {
-                throw "Cannot assign, lhs and rhs types are not the same\n";
+                throw new error::ErrorObject(error::LHS_RHS_NOT_SAME,
+                        "semantic_parse::ParseTree::typeCheck"
+                        "(VectorTree &, std::string const&)",
+                        "Cannot assign, lhs and rhs types are not the same");
             }
             break;
         case Stmnt_Exp_If:
@@ -386,7 +432,10 @@ void ParseTree::typeCheck(VectorTree &ret, std::string const& fcnName)
                   checkExprType(ret.leaves[2], fcnName) == INT) ||
                   (checkExprType(ret.leaves[0], fcnName) == CHAR &&
                   checkExprType(ret.leaves[2], fcnName) == CHAR))) {
-                throw "comparison only allowed between INT or between CHAR\n";
+                throw new error::ErrorObject(error::COMPARISON_FAULT,
+                        "semantic_parse::ParseTree::typeCheck"
+                        "(VectorTree &, std::string const&)",
+                        "Comparison only allowed between INT or between CHAR");
             }
             break;
     }

@@ -27,13 +27,23 @@ enum ErrorCode {
     FILE_CANNOT_CLOSE,      // retCode == 5
 
     // Scanning specific error codes.
-    LEX_ERROR,
+    LEX_ERROR,              // retCode = 8
 
     // Production rule related error codes.
     NO_MATCHING_PROD_RULE,  // retCode == 11
 
     // Parse Tree error codes.
     TREE_IS_NULL,           // retCode == 16
+
+    // Semantic Analysis error codes.
+    EXISTS_DUPLICATE_SYMBOL,// retCode == 21
+    EXPR_FAULT,             // retCode == 22
+    TERM_FAULT,             // retCode == 23
+    FTOR_FAULT,             // retCode == 24
+    LVAL_FAULT,             // retCode == 25
+    RET_NO_MATCH,           // retCode == 26
+    LHS_RHS_NOT_SAME,       // retCode == 27
+    COMPARISON_FAULT,       // retCode == 28
 };
 
 // Interface for ErrorObject.

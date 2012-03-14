@@ -28,6 +28,17 @@ int ErrorObjectInterface::retCode() const
 
         case FILE_CANNOT_OPEN: return 4;
         case FILE_CANNOT_CLOSE: return 5;
+        case LEX_ERROR: return 8;
+        case NO_MATCHING_PROD_RULE: return 11;
+        case TREE_IS_NULL: return 16;
+        case EXISTS_DUPLICATE_SYMBOL: return 21;
+        case EXPR_FAULT: return 22;
+        case TERM_FAULT: return 23;
+        case FTOR_FAULT: return 24;
+        case LVAL_FAULT: return 25;
+        case RET_NO_MATCH: return 26;
+        case LHS_RHS_NOT_SAME: return 27;
+        case COMPARISON_FAULT: return 28;
     }
 }
 
