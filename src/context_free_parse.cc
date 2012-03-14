@@ -32,6 +32,7 @@ common::Kind getReductionKind(ProductionRule const& rule);
 // ParseTree class
 
 ParseTree::ParseTree(common::Tokens const& tokens)
+    : ParseTreeInterface(NULL)
 {
     tree_ = build_parse_tree(tokens);
 }
