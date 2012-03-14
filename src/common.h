@@ -11,6 +11,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -102,7 +103,13 @@ struct Token {
 typedef std::vector<Token> TokenLine;
 typedef std::vector<TokenLine> Tokens;
 
-std::string toString(unsigned num);
+template <typename T>
+inline std::string toString(T rhs)
+{
+    std::stringstream ss;
+    ss << rhs;
+    return ss.str();
+}
 
 }
 
