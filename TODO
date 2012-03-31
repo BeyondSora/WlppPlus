@@ -1,0 +1,5 @@
+1. An intermediate code generation engine (SSA?)
+
+2. Documentation on details of parsing of cfg and context sensitive analysis.
+
+3. Grammar needs modification to allow function calling.
