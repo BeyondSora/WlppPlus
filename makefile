@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall
+CXXFLAGS = -Wall -g
 
 SRCDIR = src
 BUILDDIR = build
@@ -7,6 +7,8 @@ BUILDDIR = build
 BUILD = compiler
 
 OBJS_ = common.o \
+		basic_io.o \
+		error.o \
 		run_main.o \
 		file.o \
 		scan.o \

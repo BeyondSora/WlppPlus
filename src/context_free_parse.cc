@@ -1,8 +1,14 @@
+/******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ ******************************************************************************/
+
 #include "context_free_parse.h"
 
 #include <iostream>
 
 #include "lr1_rules.h"
+
+#include "error.h"
 
 namespace context_free_parse {
 
@@ -10,7 +16,7 @@ using namespace lr1_rules;  // LR1_RULES is only in another file
                             //  because of its large number of code.
 
 // Turn Tokens into one single line of tokenized input,
-//  and also prepends BOF and EOF to the source code.
+//  and also prepends BOF and appends EOF to the source code.
 // All common::COMMENT tokens are removed during this process.
 // Need some rework in the future to improve efficiency.
 void tokensLinearize(std::vector<common::Token> &src,
@@ -26,6 +32,7 @@ common::Kind getReductionKind(ProductionRule const& rule);
 // ParseTree class
 
 ParseTree::ParseTree(common::Tokens const& tokens)
+    : ParseTreeInterface(NULL)
 {
     tree_ = build_parse_tree(tokens);
 }
@@ -43,6 +50,7 @@ Tree* ParseTree::build_parse_tree(common::Tokens const& tokens)
 
     Tree *root = new Tree();            // Root of the parse tree.
     root->token.kind = common::Start;
+    root->rule = Start_Exp_Proc;
 
     Tree *curNode = root;               // Current node in the parse tree.
     bool isStateAfterReduction = false; // Determines if the current state
@@ -134,8 +142,9 @@ unsigned getReductionSize(ProductionRule const& rule)
     unsigned size = 0;
     switch (rule) {
         default:
-            throw "parse_common::getReductionSize"
-                  " - Rule not found!\n";
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "parse_common::getReductionSize(ProductionRule const&)",
+                    "Rule not found.");
             break;
 
         case Procs_Exp_Nothing:     // fall-through
@@ -210,8 +219,9 @@ common::Kind getReductionKind(ProductionRule const& rule)
     common::Kind kind;
     switch (rule) {
         default:
-            throw "parse_common::getReductionKind"
-                  " - Rule not found!\n";
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "parse_common::getReductionKind(ProductionRule const&)",
+                    "Rule not found.");
             break;
 
         case Start_Exp_Proc:

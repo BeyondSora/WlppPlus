@@ -121,12 +121,12 @@ Production Rules:
     statements -> statements statement
     statements -> Nothing
     statement -> lvalue BECOMES expr SEMI
-    statement -> IF LPAREN tests AND test RPAREN
+    statement -> IF LPAREN tests RPAREN
                   LBRACE statements RBRACE
-    statement -> IF LPAREN tests AND test RPAREN
+    statement -> IF LPAREN tests RPAREN
                   LBRACE statements RBRACE
                   ELSE LBRACE statements RBRACE
-    statement -> WHILE LPAREN tests AND test RPAREN
+    statement -> WHILE LPAREN tests RPAREN
                   LBRACE statements RBRACE
     tests -> tests AND test
     tests -> test

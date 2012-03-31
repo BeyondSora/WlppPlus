@@ -1,14 +1,17 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * Everything shared across classes, namespaces and such is
  *  included in this common namespace.
  *
  * Include this header as the first one of local headers
- *  in every other class/namespace.
+ *  in every other class/namespace that require shared information.
  ******************************************************************************/
 
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -100,7 +103,13 @@ struct Token {
 typedef std::vector<Token> TokenLine;
 typedef std::vector<TokenLine> Tokens;
 
-std::string toString(int num);
+template <typename T>
+inline std::string toString(T rhs)
+{
+    std::stringstream ss;
+    ss << rhs;
+    return ss.str();
+}
 
 }
 

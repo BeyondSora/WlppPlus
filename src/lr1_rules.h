@@ -1,13 +1,18 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * This namespace only contains all the LR1 Parse Rules
  *
  * This file is intended to be included in context_free_parse.cc
  * No other file should need this header.
  ******************************************************************************/
+
 #ifndef LR1_RULES_H
 #define LR1_RULES_H
 
 #include "context_free_parse.h"
+
+#include "error.h"
 
 namespace lr1_rules {
 
@@ -732,7 +737,11 @@ context_free_parse::LR1ParseRule getLR1Rule(unsigned state, common::Kind sym)
             break;
         }
     }
-    if (i == LR1_RULES_SIZE) throw("lr1_rules::getLR1Rule - No rule found!\n");
+    if (i == LR1_RULES_SIZE) {
+        throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+            "lr1_rules::getLR1Rule(unsigned, common::Kind)",
+            "No rule found!");
+    }
     return lr1Rule;
 }
 

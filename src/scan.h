@@ -1,4 +1,6 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * This namespace is for scanning through the source file and tokenize it.
  *
  * More implementation details are placed in .cc file,

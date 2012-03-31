@@ -1,55 +1,40 @@
+/******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ ******************************************************************************/
+
 #include "file.h"
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 
+#include "error.h"
+
 namespace file {
 
-enum Errorcode {
-    FILE_CANNOT_OPEN,
-    FILE_CANNOT_CLOSE,
-};
-
-void err(Errorcode e, std::string msg);
 void toLines(std::ifstream& ifs, common::Lines& lines);
 
 common::Lines toLines(std::string const& filename)
 {
     std::vector<std::string> lines;
 
-    try {
-        std::ifstream ifs(filename.c_str());
-        if (ifs.fail()) throw FILE_CANNOT_OPEN;
-
-        toLines(ifs, lines);
-
-        ifs.close();
-        if (ifs.fail()) throw FILE_CANNOT_CLOSE;
+    std::ifstream ifs(filename.c_str());
+    if (ifs.fail()) {
+        throw new error::ErrorObject(error::FILE_CANNOT_OPEN,
+                "file::toLines(std::string const&)",
+                "could not open file: \"" + filename + "\".");
     }
-    catch (Errorcode e) {
-        err(e, filename);
+
+    toLines(ifs, lines);
+
+    ifs.close();
+    if (ifs.fail()) {
+        throw new error::ErrorObject(error::FILE_CANNOT_CLOSE,
+                "file::toLines(std::string const&)",
+                "could not open file: \"" + filename + "\".");
     }
 
     return lines;
-}
-
-void err(Errorcode e, std::string msg)
-{
-    switch (e) {
-        default:
-            std::cerr << "Unknown error.\n";
-            break;
-        case FILE_CANNOT_OPEN:
-            std::cerr << "file \"" << msg
-                << "\" could not be opened.\n";
-            break;
-        case FILE_CANNOT_CLOSE:
-            std::cerr << "file \"" << msg
-                << "\" could not be closed.\n";
-            break;
-    }
-    std::exit(-1);
 }
 
 void toLines(std::ifstream& ifs, common::Lines& lines)

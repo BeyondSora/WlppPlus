@@ -1,3 +1,7 @@
+/******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ ******************************************************************************/
+
 #include "common.h"
 
 #include <cassert>
@@ -122,12 +126,7 @@ int Token::toInt()
     else throw NOT_AN_INT;
     return integer;
 }
-//
 
-std::string toString(int num)
-{
-    // not implemented yet
-    assert(false);
-}
+///
 
 }

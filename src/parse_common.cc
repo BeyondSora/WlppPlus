@@ -1,4 +1,10 @@
+/******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ ******************************************************************************/
+
 #include "parse_common.h"
+
+#include "error.h"
 
 namespace parse_common {
 
@@ -8,7 +14,11 @@ std::string translateProductionRule(const ProductionRule &rule)
 {
     std::string translation;
     switch (rule) {
-        default: throw "Rule not found!\n"; break;
+        default:
+            throw new error::ErrorObject(error::NO_MATCHING_PROD_RULE,
+                    "parse_common::translateProductionRule"
+                    "(const ProductionRule &",
+                    "No matching rule found during translation.");
 
         case NUL_RULE: translation = ""; break;     // NOT A PRODUCTION RULE
 
@@ -166,6 +176,48 @@ std::string translateProductionRule(const ProductionRule &rule)
     return translation;
 }
 
+Type kindToType(common::Kind kind_1, common::Kind kind_2)
+{
+    Type symType;
+    if (kind_2 == common::STAR) {
+        if (kind_1 == common::INTK) {
+            symType = INT_STAR;
+        }
+        else {  // == common::CHARK
+            symType = CHAR_STAR;
+        }
+    }
+    else {  // NOT a pointer
+        if (kind_1 == common::INTK) {
+            symType = INT;
+        }
+        else {  // == common::CHARK
+            symType = CHAR;
+        }
+    }
+    return symType;
+}
+
+std::string typeToString(Type type)
+{
+    switch (type) {
+        default:
+            throw "Unknown Type\n";
+
+        case INT:
+            return "int";
+        case INT_STAR:
+            return "int*";
+        case CHAR:
+            return "char";
+        case CHAR_STAR:
+            return "char*";
+        case NUL:
+            return "NULL";
+    }
+    return "";
+}
+
 //
 // Tree class
 
@@ -218,7 +270,9 @@ Tree* ParseTreeInterface::move()
 std::string ParseTreeInterface::toString()
 {
     if (tree_ == NULL) {
-        throw "ParseTreeInterface::toString() - tree_ is NULL!\n";
+        throw new error::ErrorObject(error::TREE_IS_NULL,
+                "parse_common::ParseTreeInterface::toString()",
+                "The parse tree is empty.");
     }
     std::string str;
     convTreeToString(tree_, str);

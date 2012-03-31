@@ -1,10 +1,13 @@
 /******************************************************************************
+ * Copyright (C) 2012 Jimmy Lu
+ *
  * This namespace contains what is shared across
  *  context-free and context-sensitive(semantic) parsing.
  *
  * More implementation details are placed in .cc file,
  *  but end users should have no need for those.
  ******************************************************************************/
+
 #ifndef PARSE_COMMON_H
 #define PARSE_COMMON_H
 
@@ -59,12 +62,12 @@ enum ProductionRule {
     Stmnts_Exp_Stmnts_Stmnt,// statements -> statements statement
     Stmnts_Exp_Nothing,     // statements -> Nothing
     Stmnt_Exp_Assign,       // statement -> lvalue BECOMES expr SEMI
-    Stmnt_Exp_If,           // statement -> IF LPAREN tests AND test RPAREN
+    Stmnt_Exp_If,           // statement -> IF LPAREN tests RPAREN
                             //               LBRACE statements RBRACE
-    Stmnt_Exp_If_Else,      // statement -> IF LPAREN tests AND test RPAREN
+    Stmnt_Exp_If_Else,      // statement -> IF LPAREN tests RPAREN
                             //               LBRACE statements RBRACE
                             //               ELSE LBRACE statements RBRACE
-    Stmnt_Exp_While,        // statement -> WHILE LPAREN tests AND test RPAREN
+    Stmnt_Exp_While,        // statement -> WHILE LPAREN tests RPAREN
                             //               LBRACE statements RBRACE
 
     Tests_Exp_Tests_Test,   // tests -> tests AND test
@@ -101,6 +104,21 @@ enum ProductionRule {
     NUL_RULE,               // NOT A PRODUCTION RULE
 };
 
+// Variable Types
+enum Type {
+    INT,
+    INT_STAR,
+    CHAR,
+    CHAR_STAR,
+    NUL,
+};
+
+// Convert Kind to Type
+Type kindToType(common::Kind kind_1, common::Kind kind_2 = common::NUL);
+
+// Convert Type to std::string
+std::string typeToString(Type type);
+
 // Base unit for ParseTree.
 // There should not be a need to create an instance of this class.
 class Tree {
@@ -125,6 +143,7 @@ class Tree {
 // Never instantiate an instance of this class by itself!
 class ParseTreeInterface {
     public:
+        virtual ~ParseTreeInterface();
         Tree* operator*();  // Returns tree_ of Type Tree*.
         Tree* move();       // Returns tree_ and then nullify it.
         std::string toString();
@@ -133,7 +152,6 @@ class ParseTreeInterface {
 
         ParseTreeInterface();
         ParseTreeInterface(Tree *tree);
-        virtual ~ParseTreeInterface();
         // Convert a tree structure into string in CFG format.
         static void convTreeToString(Tree *root, std::string &str);
 };
