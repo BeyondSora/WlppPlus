@@ -221,7 +221,7 @@ std::string typeToString(Type type)
 //
 // Tree class
 
-Tree::Tree() : rule(NUL_RULE), prev(NULL), next(NULL), down(NULL) {}
+Tree::Tree() : rule(NUL_RULE), prev(NULL), next(NULL), down(NULL), token() {}
 
 Tree::~Tree()
 {
@@ -246,7 +246,7 @@ void Tree::disconnect(Tree *rhs)
 //
 // ParseTreeInterface class
 
-ParseTreeInterface::ParseTreeInterface() {}
+ParseTreeInterface::ParseTreeInterface() : tree_(NULL) {}
 
 ParseTreeInterface::ParseTreeInterface(Tree *tree) : tree_(tree) {}
 

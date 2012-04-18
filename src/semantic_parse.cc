@@ -297,8 +297,10 @@ Type ParseTree::checkFtorType(VectorTree &vecTree, std::string const& fcnName)
 
                 case INT:
                     type = INT_STAR;
+                    break;
                 case CHAR:
                     type = CHAR_STAR;
+                    break;
             }
             break;
         case Ftor_Exp_Ptr:
@@ -311,8 +313,10 @@ Type ParseTree::checkFtorType(VectorTree &vecTree, std::string const& fcnName)
 
                 case INT_STAR:
                     type = INT;
+                    break;
                 case CHAR_STAR:
                     type = CHAR;
+                    break;
             }
             break;
     }
@@ -342,8 +346,10 @@ Type ParseTree::checkLvalType(VectorTree &vecTree, std::string const& fcnName)
 
                 case INT_STAR:
                     type = INT;
+                    break;
                 case CHAR_STAR:
                     type = CHAR;
+                    break;
             }
             break;
         case Lval_Exp_Lval:
