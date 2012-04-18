@@ -1,5 +1,15 @@
 CXX = g++
-CXXFLAGS = -Wall -g
+CXXFLAGS =
+
+# Makefile flag options
+ifeq ($(WARN), low)
+	CXXFLAGS += -Wall -Wextra
+else
+	CXXFLAGS += -Wall -Wextra -Weffc++
+endif
+ifneq ($(DEBUG), off)
+	CXXFLAGS += -g
+endif
 
 SRCDIR = src
 BUILDDIR = build
